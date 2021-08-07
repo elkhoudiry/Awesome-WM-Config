@@ -13,7 +13,7 @@ local function set_volume_widget(icon_container, volume_container)
     end)
 end
 
-local function open_volume_popup(timer, callback)
+local function open_volume_popup(widget, callback)
     volume_scripts.get_volume_level(function(volume)
         local title_widget = util_widgets.title_and_close("Volume  ")
         local slider_widget = util_widgets.slider_text_value(tonumber(volume),
@@ -32,7 +32,7 @@ local function open_volume_popup(timer, callback)
         end)
 
         slider_widget.slider:connect_signal("property::value", function() --
-            volume_scripts.set_volume_level(slider_widget.slider.value, timer)
+            volume_scripts.set_volume_level(slider_widget.slider.value, widget)
         end)
     end)
 end
@@ -64,13 +64,17 @@ function volume_widget.basic(timer)
         set_volume_widget(icon_container, volume_container)
     end)
 
+    volume_widget.widget:connect_signal("volumechanged", function()
+        set_volume_widget(icon_container, volume_container)
+    end)
+
     common.handle_click(icon_container.widget, function() --
         volume_scripts.toggle_mute(timer)
     end)
 
     common.handle_click(volume_container.widget, function()
         if popup_is_visible then return end
-        open_volume_popup(timer, function(visible)
+        open_volume_popup(volume_widget.widget, function(visible)
             --
             popup_is_visible = visible
         end)

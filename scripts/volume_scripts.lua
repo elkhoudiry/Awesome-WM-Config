@@ -37,11 +37,11 @@ function volume_scripts.get_volume_level(callback)
     end)
 end
 
-function volume_scripts.set_volume_level(value, timer)
+function volume_scripts.set_volume_level(value, widget)
     local cmd = "pamixer  --allow-boost --set-volume " .. value
 
     awful.spawn.easy_async_with_shell(cmd, function()
-        -- timer:emit_signal("timeout")
+        widget:emit_signal("volumechanged")
     end)
 end
 

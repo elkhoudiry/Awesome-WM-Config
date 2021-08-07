@@ -5,6 +5,7 @@ local theme = require("../theme")
 local space = common.txt_space
 
 local network_widget = {}
+network_widget.sleep = 1
 
 local function get_printable_speed(number)
 
@@ -35,11 +36,17 @@ local function set_active_conn_container(container, wired, rx, tx)
         container.widget.children[1].text = space .. "" .. space
     end
 
+    if not container.activate then
+        container.widget.children[2].visible = true
+        container.widget.children[3].visible = true
+        container.activate = true
+    end
+
     rx = common.bold_markup(get_printable_speed(rx))
     tx = common.bold_markup(get_printable_speed(tx))
 
-    container.widget.children[2].markup = space .. " " .. rx .. space
-    container.widget.children[3].markup = space .. " " .. tx .. space
+    container.widget.children[2].markup = space .. rx .. space
+    container.widget.children[3].markup = space .. tx .. space
 
 end
 
@@ -51,10 +58,16 @@ local function set_discon_conn_container(container, wired)
         container.widget.children[1].text = space .. "" .. space
     end
 
-    container.widget.children[2].markup =
-        space .. common.bold_markup("0.0 B") .. space
-    container.widget.children[3].markup =
-        space .. common.bold_markup("0.0 B") .. space
+    if container.active then
+        container.widget.children[2].visible = false
+        container.widget.children[3].visible = false
+        container.active = false
+    end
+
+    -- container.widget.children[2].markup =
+    --     space .. common.bold_markup("0.0 B") .. space
+    -- container.widget.children[3].markup =
+    --     space .. common.bold_markup("0.0 B") .. space
 
 end
 
@@ -63,12 +76,14 @@ local function manage_device(device, timer, callback)
     local currentRx = 0
     local currentTx = 0
 
+    callback(false, 0, 0)
+
     timer:connect_signal("timeout", function()
         network_scripts.check_connected(device, function(connected)
             if connected then
                 network_scripts.get_connection_bytes(device, function(nrx, ntx)
-                    local rx = (nrx - currentRx) / 5
-                    local tx = (ntx - currentTx) / 5
+                    local rx = (nrx - currentRx) / network_widget.sleep
+                    local tx = (ntx - currentTx) / network_widget.sleep
 
                     currentRx = nrx
                     currentTx = ntx
@@ -88,6 +103,8 @@ local function manage_devices(list, table, timer, wired)
             local container = table[i]
             if connected then
                 set_active_conn_container(container, wired, rx, tx)
+            else
+                set_discon_conn_container(container, wired)
             end
         end)
     end
@@ -104,6 +121,7 @@ local function init_widget_table(list)
             {widget = wibox.widget.textbox, font = theme.font},
             {widget = wibox.widget.textbox, font = theme.font}
         }
+        container.active = true
         table.insert(t, container)
     end
 
@@ -118,7 +136,8 @@ function network_widget.basic(wiredList, wifiList)
     local wired_widgets_table = init_widget_table(wiredList)
     local wifi_widgets_table = init_widget_table(wifiList)
 
-    local timer = timer({timeout = 5})
+    local timer = timer({timeout = network_widget.sleep})
+    timer:start()
 
     manage_devices(wiredList, wired_widgets_table, timer, true)
     manage_devices(wifiList, wifi_widgets_table, timer, false)
@@ -128,8 +147,6 @@ function network_widget.basic(wiredList, wifiList)
         wifi_widgets_table,
         layout = wibox.layout.align.horizontal
     }
-
-    timer:start()
 
     return connection_widget
 end

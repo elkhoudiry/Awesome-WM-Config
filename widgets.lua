@@ -3,6 +3,7 @@ require("awful.autofocus")
 local utils = require("utils")
 local kb_layout_widget = require("./widgets/kb_layout_widget")
 local volume_widget = require("./widgets/volume_widget")
+local battery_widget = require("./widgets/battery_widget")
 local util_scripts = require("util_scripts")
 local theme = require("theme")
 
@@ -11,15 +12,7 @@ local widgets = {}
 
 widgets.keyboard_layout = kb_layout_widget.basic()
 widgets.volume = volume_widget.basic
-
-local function set_battery_widget(icon_container, capacity_container)
-
-    util_scripts.battery(function(icon, capacity)
-        icon_container.widget.text = space .. icon .. space
-        capacity_container.widget.markup =
-            space .. utils.bold_markup(capacity) .. space
-    end)
-end
+widgets.battery = battery_widget.basic
 
 local function get_printable_speed(number)
 
@@ -111,31 +104,6 @@ local function manage_adapters_list(list, widgets_table, timer, wired)
         manage_device(value, timer, container, wired)
         table.insert(widgets_table, container)
     end
-end
-
-function widgets.battery(timer)
-    local battery_widget = {}
-    local icon_container = wibox.container.background()
-    local capacity_container = wibox.container.background()
-
-    icon_container.widget = wibox.widget.textbox()
-    icon_container.widget.font = theme.font
-
-    capacity_container.widget = wibox.widget.textbox()
-    capacity_container.widget.font = theme.font
-
-    battery_widget.widget = wibox.widget {
-        icon_container,
-        capacity_container,
-        layout = wibox.layout.align.horizontal
-    }
-
-    set_battery_widget(icon_container, capacity_container)
-    timer:connect_signal("timeout", function()
-        set_battery_widget(icon_container, capacity_container)
-    end)
-
-    return battery_widget
 end
 
 function widgets.time_date()

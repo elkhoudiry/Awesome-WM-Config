@@ -39,4 +39,10 @@ function common.handle_click(w, cb)
     w:buttons(awful.util.table.join(awful.button({}, 1, function() cb() end)))
 end
 
+function common.destroy_widget(widget)
+    local children = widget:get_all_children()
+    for index, _ in ipairs(children) do children[index] = nil end
+    widget = nil
+end
+
 return common

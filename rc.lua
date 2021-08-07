@@ -25,7 +25,7 @@ local widgets = require("widgets")
 local refreshTimer = timer({timeout = 5})
 
 local battery_widget = widgets.battery(refreshTimer)
-local language_widget = widgets.keyboard_layout
+local language_widget = widgets.keyboard_layout()
 
 local volume_widget = widgets.volume(refreshTimer)
 local time_date_widget = widgets.time_date()

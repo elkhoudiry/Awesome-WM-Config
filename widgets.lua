@@ -4,15 +4,17 @@ local utils = require("utils")
 local kb_layout_widget = require("./widgets/kb_layout_widget")
 local volume_widget = require("./widgets/volume_widget")
 local battery_widget = require("./widgets/battery_widget")
+local time_date_widget = require("./widgets/time_date_widget")
 local util_scripts = require("util_scripts")
 local theme = require("theme")
 
 local space = " "
 local widgets = {}
 
-widgets.keyboard_layout = kb_layout_widget.basic()
+widgets.keyboard_layout = kb_layout_widget.basic
 widgets.volume = volume_widget.basic
 widgets.battery = battery_widget.basic
+widgets.time_date = time_date_widget.basic
 
 local function get_printable_speed(number)
 
@@ -104,26 +106,6 @@ local function manage_adapters_list(list, widgets_table, timer, wired)
         manage_device(value, timer, container, wired)
         table.insert(widgets_table, container)
     end
-end
-
-function widgets.time_date()
-    local time_date_widget = {}
-    local time_date_widget_container = wibox.container.background()
-
-    local textclock = wibox.widget.textclock()
-    textclock.format = utils.fontconfig(theme.font, space ..
-                                            utils.bold_markup(
-                                                "%a %d - %b  %H:%M %p") .. space)
-    textclock.refresh = 60
-
-    time_date_widget_container.widget = textclock
-
-    time_date_widget.widget = wibox.widget {
-        time_date_widget_container,
-        layout = wibox.layout.align.horizontal
-    }
-
-    return time_date_widget
 end
 
 function widgets.connection(wiredList, wifiList)

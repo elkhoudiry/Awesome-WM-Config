@@ -1,14 +1,16 @@
 local wibox = require("wibox")
 require("awful.autofocus")
 local utils = require("utils")
-local kb_layout = require("./widgets/kb_layout_widget")
+local kb_layout_widget = require("./widgets/kb_layout_widget")
+local volume_widget = require("./widgets/volume_widget")
 local util_scripts = require("util_scripts")
 local theme = require("theme")
 
 local space = " "
 local widgets = {}
 
-widgets.keyboard_layout = kb_layout.basic()
+widgets.keyboard_layout = kb_layout_widget.basic()
+widgets.volume = volume_widget.basic
 
 local function set_battery_widget(icon_container, capacity_container)
 
@@ -16,14 +18,6 @@ local function set_battery_widget(icon_container, capacity_container)
         icon_container.widget.text = space .. icon .. space
         capacity_container.widget.markup =
             space .. utils.bold_markup(capacity) .. space
-    end)
-end
-
-local function set_volume_widget(icon_container, volume_container)
-    util_scripts.volume(function(icon, volume)
-        icon_container.widget.text = space .. icon .. space
-        volume_container.widget.markup =
-            space .. utils.bold_markup(volume) .. space
     end)
 end
 
@@ -184,47 +178,6 @@ function widgets.connection(wiredList, wifiList)
     timer:start()
 
     return connection_widget
-end
-
-function widgets.volume(timer)
-
-    local volume_widget = {}
-    local icon_container = wibox.container.background()
-    local volume_container = wibox.container.background()
-    local popup_is_visible = false
-
-    icon_container.widget = wibox.widget.textbox()
-    icon_container.widget.font = theme.font
-
-    volume_container.widget = wibox.widget.textbox()
-    volume_container.widget.font = theme.font
-
-    volume_widget.widget = wibox.widget {
-        icon_container,
-        volume_container,
-        layout = wibox.layout.align.horizontal
-    }
-
-    set_volume_widget(icon_container, volume_container)
-
-    timer:connect_signal("timeout", function()
-        set_volume_widget(icon_container, volume_container)
-    end)
-
-    utils.handle_click(icon_container.widget, function()
-        --
-        util_scripts.toggle_mute(timer)
-    end)
-
-    utils.handle_click(volume_container.widget, function()
-        if popup_is_visible then return end
-        open_volume_popup(timer, function(visible)
-            --
-            popup_is_visible = visible
-        end)
-    end)
-
-    return volume_widget
 end
 
 return widgets

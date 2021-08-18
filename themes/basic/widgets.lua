@@ -143,14 +143,16 @@ local function set_kb_layout(layout, callback)
 end
 
 local function switch_basic_layout(language_widget)
-    if language_widget.layout == "us" then
-        language_widget.layout = "ar"
+    if language_widget.current_layout < language_widget.layouts_size - 1 then
+        language_widget.current_layout = language_widget.current_layout + 1
     else
-        language_widget.layout = "us"
+        language_widget.current_layout = 1
     end
 
-    set_kb_layout(language_widget.layout, function()
-        set_language_widget(language_widget.widget, language_widget.layout)
+    set_kb_layout(language_widget.layouts[language_widget.current_layout], -- 
+    function() --
+        set_language_widget(language_widget.widget,
+                            language_widget.layouts[language_widget.current_layout])
     end)
 end
 
@@ -320,9 +322,15 @@ end
 -- [[ ################################################################### ]] --
 -- [[ ############# KEYBOARD LAYOUT WIDGET #############
 
-function basic_module.basic_kb_layout()
+function basic_module.basic_kb_layout(layouts)
     local language_widget = {}
-    language_widget.layout = "us"
+    language_widget.current_layout = 1
+    language_widget.layouts = layouts
+
+    local size = 1
+    for _, __ in ipairs(layouts) do size = size + 1 end
+    language_widget.layouts_size = size
+
     language_widget.widget = wibox.widget {
         {{widget = wibox.widget.textbox}, widget = wibox.container.background},
         layout = wibox.layout.align.horizontal
@@ -334,7 +342,8 @@ function basic_module.basic_kb_layout()
     end)
 
     language_widget.refresh = function()
-        set_language_widget(language_widget.widget, language_widget.layout)
+        set_language_widget(language_widget.widget,
+                            language_widget.layouts[language_widget.current_layout])
     end
 
     language_widget.refresh()

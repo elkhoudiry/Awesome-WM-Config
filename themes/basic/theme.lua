@@ -173,7 +173,7 @@ theme.connectivity_widget = {}
 
 function theme.init_widgets()
     theme.battery_widget = basic_widgets.basic_battery("BAT0")
-    theme.language_widget = basic_widgets.basic_kb_layout()
+    theme.language_widget = basic_widgets.basic_kb_layout({"us", "ar"})
     theme.volume_widget = basic_widgets.basic_volume()
     theme.time_date_widget = basic_widgets.basic_time_date()
     theme.connectivity_widget =

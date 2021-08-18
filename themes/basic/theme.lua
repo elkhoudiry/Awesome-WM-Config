@@ -171,6 +171,21 @@ theme.volume_widget = {}
 theme.time_date_widget = {}
 theme.connectivity_widget = {}
 
+awful.keyboard.append_global_keybindings({
+    awful.key({modkey}, "space", function() theme.language_widget.switch() end,
+              {description = "switch keyboard layout", group = "custom"}),
+    awful.key({modkey}, "w", function() awful.spawn("firefox") end,
+              {description = "launch firefox", group = "custom"}),
+    awful.key({modkey}, "f", function() awful.spawn("thunar") end,
+              {description = "launch thunar", group = "custom"}),
+    awful.key({}, "Print", function() awful.spawn("flameshot screen -c") end,
+              {description = "take full screenshot", group = "custom"}),
+    awful.key({"Shift"}, "Print", function() awful.spawn("flameshot gui") end,
+              {description = "take custom screenshot", group = "custom"}),
+    awful.key({modkey}, "s", function() awful.spawn("flameshot gui") end,
+              {description = "take custom screenshot", group = "custom"})
+})
+
 function theme.init_widgets()
     theme.battery_widget = basic_widgets.basic_battery("BAT0")
     theme.language_widget = basic_widgets.basic_kb_layout({"us", "ar"})

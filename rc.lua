@@ -91,7 +91,7 @@ awful.mouse.append_global_mousebindings({
 
 -- General Awesome keys
 awful.keyboard.append_global_keybindings({
-    awful.key({modkey}, "s", hotkeys_popup.show_help,
+    awful.key({modkey, "Control"}, "s", hotkeys_popup.show_help,
               {description = "show help", group = "awesome"}),
     awful.key({modkey, "Control"}, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
@@ -177,9 +177,11 @@ awful.keyboard.append_global_keybindings({
                   function() awful.tag.incncol(-1, nil, true) end, {
         description = "decrease the number of columns",
         group = "layout"
-    }), awful.key({modkey}, "space", function() awful.layout.inc(1) end,
-                  {description = "select next", group = "layout"}),
-    awful.key({modkey, "Shift"}, "space", function() awful.layout.inc(-1) end,
+    }),
+    awful.key({modkey, "Shift"}, "space", function() awful.layout.inc(1) end,
+              {description = "select next", group = "layout"}),
+    awful.key({modkey, "Control", "Shift"}, "space",
+              function() awful.layout.inc(-1) end,
               {description = "select previous", group = "layout"})
 })
 
@@ -252,7 +254,7 @@ end)
 
 client.connect_signal("request::default_keybindings", function()
     awful.keyboard.append_client_keybindings({
-        awful.key({modkey}, "f", function(c)
+        awful.key({modkey, "Control"}, "f", function(c)
             c.fullscreen = not c.fullscreen
             c:raise()
         end, {description = "toggle fullscreen", group = "client"}),

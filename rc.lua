@@ -88,7 +88,7 @@ refreshTimer:start()
 
 -- Mouse bindings
 awful.mouse.append_global_mousebindings({
-    awful.button({}, 3, function() mymainmenu:toggle() end),
+    awful.button({}, 3, function() end),
     awful.button({}, 4, awful.tag.viewprev),
     awful.button({}, 5, awful.tag.viewnext)
 })
@@ -99,7 +99,7 @@ awful.mouse.append_global_mousebindings({
 awful.keyboard.append_global_keybindings({
     awful.key({modkey}, "s", hotkeys_popup.show_help,
               {description = "show help", group = "awesome"}),
-    awful.key({modkey}, "w", function() mymainmenu:show() end,
+    awful.key({modkey}, "w", function() end,
               {description = "show main menu", group = "awesome"}),
     awful.key({modkey, "Control"}, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),

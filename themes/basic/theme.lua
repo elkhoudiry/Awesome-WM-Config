@@ -11,26 +11,24 @@ local awful = require("awful")
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
 
+local theme_config = require("themes/basic/config")
 local basic_widgets = require("themes/basic/widgets")
 
 local theme = {}
 
-local color_accent = "#F8708C"
-local color_background = "#262525"
 local modkey = "Mod4"
 
 theme.font = "TerminessTTF Nerd Font 10"
 theme.taglist_font = "RobotoMono Nerd Font 9"
 
-theme.bg_normal = color_background
+theme.bg_normal = "#222222"
 theme.bg_focus = "#535d6c"
 theme.bg_urgent = "#ff0000"
 theme.bg_minimize = "#444444"
 theme.bg_systray = theme.bg_normal
 theme.systray_icon_spacing = 6
 
--- theme.fg_normal     = "#aaaaaa"
-theme.fg_normal = color_accent
+theme.fg_normal = "#aaaaaa"
 theme.fg_focus = "#ffffff"
 theme.fg_urgent = "#ffffff"
 theme.fg_minimize = "#ffffff"
@@ -38,7 +36,7 @@ theme.fg_minimize = "#ffffff"
 theme.useless_gap = dpi(0)
 theme.border_width = dpi(2)
 theme.border_color_normal = "#000000"
-theme.border_color_active = color_accent
+theme.border_color_active = "#aaaaaa"
 theme.border_color_marked = "#91231c"
 
 theme.tasklist_align = "center"
@@ -59,9 +57,9 @@ theme.tasklist_align = "center"
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-                                taglist_square_size, theme.fg_normal)
+                                taglist_square_size, theme_config.color_accent)
 theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-                                  taglist_square_size, theme.fg_normal)
+                                  taglist_square_size, theme_config.color_accent)
 
 -- Variables set for theming notifications:
 -- notification_font
@@ -163,6 +161,9 @@ rnotification.connect_signal('request::rules', function()
         properties = {bg = '#ff0000', fg = '#ffffff'}
     }
 end)
+
+-- [[ ############ THEME CONFIG HERE ############ ]]
+theme_config.config_theme(theme)
 
 theme.battery_widget = {}
 theme.language_widget = {}

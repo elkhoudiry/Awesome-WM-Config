@@ -12,7 +12,6 @@ function util_widgets.slider_text_value(value, max)
         forced_width = 50,
         bar_color = "#ffffff",
         bar_height = 3,
-        handle_color = color_accent,
         handle_shape = gears.shape.circle,
         -- handle_border_color = theme.border_color,
         handle_border_width = 1,
@@ -86,7 +85,6 @@ end
 function util_widgets.popup(widget)
     local pop = awful.popup {
         widget = {widget, margins = 10, widget = wibox.container.margin},
-        border_color = color_accent,
         border_width = 2,
         ontop = true
     }

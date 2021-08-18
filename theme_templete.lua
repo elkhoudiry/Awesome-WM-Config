@@ -9,23 +9,21 @@ local dpi = xresources.apply_dpi
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
 
-local theme = {}
+local theme_config = require("themes/basic/config")
 
-color_accent = "#F8708C"
-color_background = "#262525"
+local theme = {}
 
 theme.font = "TerminessTTF Nerd Font 10"
 theme.taglist_font = "RobotoMono Nerd Font 9"
 
-theme.bg_normal = color_background
+theme.bg_normal = "#222222"
 theme.bg_focus = "#535d6c"
 theme.bg_urgent = "#ff0000"
 theme.bg_minimize = "#444444"
 theme.bg_systray = theme.bg_normal
 theme.systray_icon_spacing = 6
 
--- theme.fg_normal     = "#aaaaaa"
-theme.fg_normal = color_accent
+theme.fg_normal = "#aaaaaa"
 theme.fg_focus = "#ffffff"
 theme.fg_urgent = "#ffffff"
 theme.fg_minimize = "#ffffff"
@@ -33,7 +31,7 @@ theme.fg_minimize = "#ffffff"
 theme.useless_gap = dpi(0)
 theme.border_width = dpi(2)
 theme.border_color_normal = "#000000"
-theme.border_color_active = color_accent
+theme.border_color_active = "#aaaaaa"
 theme.border_color_marked = "#91231c"
 
 theme.tasklist_align = "center"
@@ -142,6 +140,9 @@ theme.layout_cornernw = themes_path .. "default/layouts/cornernww.png"
 theme.layout_cornerne = themes_path .. "default/layouts/cornernew.png"
 theme.layout_cornersw = themes_path .. "default/layouts/cornersww.png"
 theme.layout_cornerse = themes_path .. "default/layouts/cornersew.png"
+
+-- [[ ############ THEME CONFIG HERE ############ ]]
+theme_config.config_theme(theme)
 
 -- Generate Awesome icon:
 theme.awesome_icon = theme_assets.awesome_icon(theme.menu_height,

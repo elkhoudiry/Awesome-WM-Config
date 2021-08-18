@@ -401,3 +401,19 @@ naughty.connect_signal("request::display",
 client.connect_signal("mouse::enter", function(c)
     c:activate{context = "mouse_enter", raise = false}
 end)
+
+-- Auto Start apps
+do
+    local autostarts = {
+        "flameshot", "picom --experimental-backends --backend glx"
+    }
+
+    for _, i in pairs(autostarts) do
+        awful.spawn.easy_async_with_shell('ps -C ' .. i .. ' |wc -l',
+                                          function(stdout, stderr, reason,
+                                                   exit_code)
+            gears.debug.dump(stdout)
+            if tonumber(stdout) or 0 < 2 then awful.spawn.once(i) end
+        end)
+    end
+end

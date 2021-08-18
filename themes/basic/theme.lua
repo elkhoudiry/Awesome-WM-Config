@@ -302,6 +302,7 @@ function theme.at_screen_connect(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             s.mylayoutbox,
+            wibox.widget.textbox(" "),
             wibox.widget.systray(),
             theme.connectivity_widget.widget,
             -- connection_widget.widget,

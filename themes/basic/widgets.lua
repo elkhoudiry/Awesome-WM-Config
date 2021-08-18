@@ -219,6 +219,11 @@ local function update_devices_state(devices, states)
     end
 end
 
+local function get_device_connection_state(device_name, callback)
+    local cmd = "nmcli | grep " .. device_name .. ":"
+    awful.spawn.easy_async_with_shell(cmd, function(out) callback(out) end)
+end
+
 local function get_devices_state(all_devices_str, callback)
     awful.spawn.easy_async_with_shell(
         " echo $(sh $HOME/.config/awesome/shell_scripts/connectivity/basic_script.sh -d '" ..
@@ -247,6 +252,21 @@ local function init_devices(package, devices, wired)
             {widget = wibox.widget.textbox, text = "RX "},
             {widget = wibox.widget.textbox, text = "TX "}
         }
+
+        local tooltip = awful.tooltip {objects = {device.container}}
+        tooltip.visible = false
+
+        device.container:connect_signal("mouse::enter", function()
+            tooltip.visible = true
+            tooltip.text = ""
+            get_device_connection_state(device.name, function(state)
+                tooltip.text = state
+            end)
+        end)
+
+        device.container:connect_signal("mouse::leave", function() --
+            tooltip.visible = false
+        end)
 
         if wired then
             table.insert(package.wired_layout, device.container)

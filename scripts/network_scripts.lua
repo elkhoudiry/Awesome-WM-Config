@@ -1,14 +1,16 @@
 local awful = require("awful")
+local common = require("../utils/common")
 
 local network_scripts = {}
 
 function network_scripts.check_connected(device, callback)
-
     local cmd = "nmcli device show " .. device .. " | awk '/STATE/{print $2}'"
 
     awful.spawn.easy_async_with_shell(cmd, function(result)
         if tonumber(result) == 100 then
-            callback(true)
+            network_scripts.get_connection_bytes(device, function(rx, tx)
+                callback(true, rx, tx)
+            end)
         else
             callback(false)
         end

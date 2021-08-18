@@ -9,6 +9,8 @@ local awful = require("awful")
 require("awful.autofocus")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
+beautiful.init("~/.config/awesome/themes/basic/theme.lua")
+beautiful.init_widgets()
 -- Notification library
 local naughty = require("naughty")
 -- Declarative object management
@@ -17,27 +19,14 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.hotkeys_popup.keys")
 
-local utils = require("utils")
-local util_scripts = require("util_scripts")
-local util_widgets = require("util_widgets")
-local widgets = require("widgets")
+local widgets = require("themes/basic/widgets")
+
+local util_widgets = require("utils/util_widgets")
+local debugging_widget = util_widgets.textbox("Debugging: ")
 
 local refreshTimer = timer({timeout = 5})
 
-local battery_widget = widgets.battery(refreshTimer)
-local language_widget = widgets.keyboard_layout()
-
-local volume_widget = widgets.volume(refreshTimer)
-local time_date_widget = widgets.time_date()
-
--- up to 3 wired adapters, and up to 3 wifi adapters
-local connection_widget = widgets.connection({"enp59s0"}, {"wlp0s20f3"})
-
-local debugging_widget = util_widgets.textbox("Debugging: ")
-
-debugging_widget:buttons(awful.util.table.join(
-                             awful.button({}, 1,
-                                          function() util_scripts.restart() end)))
+debugging_str = ""
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -53,13 +42,12 @@ naughty.connect_signal("request::display_error", function(message, startup)
 end)
 -- }}}
 
-beautiful.init("~/.config/awesome/theme.lua")
-
 local terminal = "kitty"
 local editor = os.getenv("EDITOR") or "nano"
 local editor_cmd = terminal .. " -e " .. editor
 
 local modkey = "Mod4"
+awful.modKey = "Mod"
 
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 
@@ -72,9 +60,6 @@ end)
 
 -- {{{ Wibar
 
--- Create a textclock widget
-local mytextclock = wibox.widget.textclock()
-
 screen.connect_signal("request::wallpaper", function(s)
     -- Wallpaper
     if beautiful.wallpaper then
@@ -85,99 +70,19 @@ screen.connect_signal("request::wallpaper", function(s)
     end
 end)
 
-screen.connect_signal("request::desktop_decoration", function(s)
-    awful.tag({"1", "2", "3", "4", "5"}, s, awful.layout.layouts[2])
+-- screen.connect_signal("request::desktop_decoration",
+--                       function(s) beautiful.at_screen_connect(s) end)
 
-    -- Create a promptbox for each screen
-    s.mypromptbox = awful.widget.prompt()
+-- screen.connect_signal("request::desktop_decoration",
+--                       function(s)
 
-    -- Create an imagebox widget which will contain an icon indicating which layout we're using.
-    s.mylayoutbox = awful.widget.layoutbox {
-        screen = s,
-        buttons = {
-            awful.button({}, 1, function() awful.layout.inc(1) end),
-            awful.button({}, 3, function() awful.layout.inc(-1) end),
-            awful.button({}, 4, function() awful.layout.inc(-1) end),
-            awful.button({}, 5, function() awful.layout.inc(1) end)
-        }
-    }
-
-    -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist {
-        screen = s,
-        filter = awful.widget.taglist.filter.all,
-        buttons = {
-            awful.button({}, 1, function(t) t:view_only() end),
-            awful.button({modkey}, 1, function(t)
-                if client.focus then client.focus:move_to_tag(t) end
-            end), awful.button({}, 3, awful.tag.viewtoggle),
-            awful.button({modkey}, 3, function(t)
-                if client.focus then client.focus:toggle_tag(t) end
-            end),
-            awful.button({}, 4, function(t)
-                awful.tag.viewprev(t.screen)
-            end),
-            awful.button({}, 5, function(t)
-                awful.tag.viewnext(t.screen)
-            end)
-        }
-    }
-
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-        screen = s,
-        filter = awful.widget.tasklist.filter.currenttags,
-        buttons = {
-            awful.button({}, 1, function(c)
-                c:activate{context = "tasklist", action = "toggle_minimization"}
-            end), awful.button({}, 3, function()
-                awful.menu.client_list {theme = {width = 250}}
-            end),
-            awful.button({}, 4, function()
-                awful.client.focus.byidx(-1)
-            end),
-            awful.button({}, 5, function()
-                awful.client.focus.byidx(1)
-            end)
-        }
-    }
-
-    -- Create the wibox
-    s.mywibox = awful.wibar({position = "top", screen = s})
-
-    -- Add widgets to the wibox
-    s.mywibox.widget = {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            s.mytaglist,
-            s.mypromptbox
-        },
-        s.mytasklist, -- Middle widget
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            debugging_widget,
-            connection_widget.widget,
-            volume_widget.widget,
-            battery_widget.widget,
-            language_widget.widget,
-            wibox.widget.systray(),
-            time_date_widget.widget,
-            s.mylayoutbox
-        }
-    }
-end)
-
-local currentRx = 0
+awful.screen.connect_for_each_screen(
+    function(s) beautiful.at_screen_connect(s) end)
 
 refreshTimer:connect_signal("timeout", function()
-
-    util_scripts.volume(function(icon, volume)
-
-        debugging_widget.text = icon .. "    " .. volume
-
-    end)
-
+    beautiful.connectivity_widget.refresh()
+    beautiful.battery_wdiget.refresh()
+    beautiful.volume_widget.refresh()
 end)
 refreshTimer:start()
 

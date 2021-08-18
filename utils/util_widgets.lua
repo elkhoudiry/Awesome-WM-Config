@@ -4,7 +4,7 @@ local gears = require("gears")
 
 local util_widgets = {}
 
-function util_widgets.slider_text_value(value, max, theme)
+function util_widgets.slider_text_value(value, max)
 
     local slider = wibox.widget {
         bar_shape = gears.shape.rounded_rect,
@@ -14,7 +14,7 @@ function util_widgets.slider_text_value(value, max, theme)
         bar_height = 3,
         handle_color = color_accent,
         handle_shape = gears.shape.circle,
-        handle_border_color = theme.border_color,
+        -- handle_border_color = theme.border_color,
         handle_border_width = 1,
         value = value,
         maximum = max,
@@ -90,9 +90,10 @@ function util_widgets.popup(widget)
         border_width = 2,
         ontop = true
     }
-    pop:move_next_to(mouse.current_widget_geometry)
-    pop.visible = true
 
+    pop:move_next_to(mouse.current_widget_geometry)
+
+    pop.visible = true
     return pop
 end
 

@@ -23,6 +23,12 @@ function common.split(inputstr, sep)
     return t
 end
 
+function common.table_to_string(table)
+    local result = ""
+    for i, b in ipairs(table) do result = result .. " " .. b.name .. " " end
+    return result
+end
+
 function common.ensure_length(text, length)
 
     local splits_1_length = string.len(text)

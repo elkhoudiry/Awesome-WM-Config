@@ -9,9 +9,11 @@ local space = common.txt_space
 -- [[ ################################################################### ]] --
 -- [[ ############# BATTERY HELPER FUNCTIONS #############
 
-local function get_basic_battery(callback)
-    local status_cmd = "cat /sys/class/power_supply/BAT0/status"
-    local capacity_cmd = "cat /sys/class/power_supply/BAT0/capacity"
+local function get_basic_battery(battery_name, callback)
+    local status_cmd = -- =======>
+    "cat /sys/class/power_supply/" .. battery_name .. "/status"
+    local capacity_cmd = -- ======>
+    "cat /sys/class/power_supply/" .. battery_name .. "/capacity"
 
     awful.spawn.easy_async_with_shell(status_cmd, function(status) -- 
         awful.spawn.easy_async_with_shell(capacity_cmd, function(capacity)
@@ -405,7 +407,7 @@ end
 -- [[ ################################################################### ]] --
 -- [[ ############# BATTERY WIDGET #############
 
-function basic_module.basic_battery()
+function basic_module.basic_battery(battery_name)
     local battery_package = {}
 
     battery_package.icon_container = wibox.container.background()
@@ -418,7 +420,7 @@ function basic_module.basic_battery()
     battery_package.level = ""
 
     battery_package.refresh = function()
-        get_basic_battery(function(icon, level)
+        get_basic_battery(battery_name, function(icon, level)
             battery_package.icon = icon
             battery_package.level = level
             set_battery_widget(battery_package)

@@ -1,11 +1,6 @@
 ---------------------------
 -- Default awesome theme --
 ---------------------------
-local gears = require("gears")
-local awful = require("awful")
-local wibox = require("wibox")
-local scripts_path = "~/.config/awesome/scripts/"
-
 local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
 local rnotification = require("ruled.notification")

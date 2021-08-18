@@ -19,11 +19,6 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.hotkeys_popup.keys")
 
-local widgets = require("themes/basic/widgets")
-
-local util_widgets = require("utils/util_widgets")
-local debugging_widget = util_widgets.textbox("Debugging: ")
-
 local refreshTimer = timer({timeout = 5})
 
 debugging_str = ""
@@ -38,7 +33,6 @@ naughty.connect_signal("request::display_error", function(message, startup)
             (startup and " during startup!" or "!"),
         message = message
     }
-    debugging_widget.text = message
 end)
 -- }}}
 
@@ -81,7 +75,7 @@ awful.screen.connect_for_each_screen(
 
 refreshTimer:connect_signal("timeout", function()
     beautiful.connectivity_widget.refresh()
-    beautiful.battery_wdiget.refresh()
+    beautiful.battery_widget.refresh()
     beautiful.volume_widget.refresh()
 end)
 refreshTimer:start()

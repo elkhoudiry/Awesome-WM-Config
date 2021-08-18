@@ -293,7 +293,6 @@ function basic_module.basic_connectivity(wired_devices, wifi_devices)
     end
 
     package.refresh()
-
     return package
 end
 -- ]]
@@ -303,7 +302,6 @@ end
 
 function basic_module.basic_kb_layout()
     local language_widget = {}
-
     language_widget.layout = "us"
     language_widget.widget = wibox.widget {
         {{widget = wibox.widget.textbox}, widget = wibox.container.background},
@@ -334,7 +332,6 @@ function basic_module.basic_time_date()
     local textclock = wibox.widget.textclock()
     local format = space .. common.bold_markup("%a %d - %b  %H:%M %p") .. space
 
-    -- textclock.format = common.fontconfig(theme.font, format)
     textclock.format = format
     textclock.refresh = 60
 
@@ -352,7 +349,6 @@ end
 -- [[ ############# VOLUME WIDGET #############
 
 function basic_module.basic_volume()
-
     local volume_package = {}
     volume_package.icon_container = wibox.container.background()
     volume_package.volume_container = wibox.container.background()
@@ -399,7 +395,6 @@ function basic_module.basic_volume()
     end)
 
     volume_package.refresh()
-
     return volume_package
 end
 -- ]]
@@ -419,8 +414,8 @@ function basic_module.basic_battery(battery_name)
     battery_package.icon = ""
     battery_package.level = ""
 
-    battery_package.refresh = function()
-        get_basic_battery(battery_name, function(icon, level)
+    battery_package.refresh = function(num)
+        get_basic_battery("BAT0", function(icon, level) -- 
             battery_package.icon = icon
             battery_package.level = level
             set_battery_widget(battery_package)

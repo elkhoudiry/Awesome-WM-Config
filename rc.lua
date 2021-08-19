@@ -77,6 +77,7 @@ refreshTimer:connect_signal("timeout", function()
     beautiful.connectivity_widget.refresh()
     beautiful.battery_widget.refresh()
     beautiful.volume_widget.refresh()
+    beautiful.clients_widget.refresh()
 end)
 refreshTimer:start()
 
@@ -333,6 +334,11 @@ ruled.client.connect_signal("request::rules", function()
         id = "titlebars",
         rule_any = {type = {"dialog"}},
         properties = {titlebars_enabled = true}
+    }
+
+    ruled.client.append_rule {
+        rule = {class = "firefox"},
+        properties = {opacity = 1, maximized = false, floating = false}
     }
 
     -- Set Firefox to always map on the tag named "2" on screen 1.

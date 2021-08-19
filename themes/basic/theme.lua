@@ -170,6 +170,7 @@ theme.language_widget = {}
 theme.volume_widget = {}
 theme.time_date_widget = {}
 theme.connectivity_widget = {}
+theme.clients_widget = {}
 
 awful.keyboard.append_global_keybindings({
     awful.key({modkey}, "space", function() theme.language_widget.switch() end,
@@ -186,6 +187,15 @@ awful.keyboard.append_global_keybindings({
               {description = "take custom screenshot", group = "custom"})
 })
 
+local function get_screen_clients(s)
+    local tag = s.selected_tag
+    local all = 0
+    local visable = 0
+    for _, __ in ipairs(tag:clients()) do all = all + 1 end
+    for _, __ in ipairs(s.clients) do visable = visable + 1 end
+    return "[ " .. tostring(visable) .. " | " .. tostring(all) .. " ]"
+end
+
 function theme.init_widgets()
     theme.battery_widget = basic_widgets.basic_battery("BAT0")
     theme.language_widget = basic_widgets.basic_kb_layout({"us", "ar"})
@@ -194,6 +204,19 @@ function theme.init_widgets()
     theme.connectivity_widget =
         basic_widgets.basic_connectivity({"enp59s0"}, -- =>
         {"wlp0s20f3"})
+
+    theme.clients_widget.widget = wibox.widget.textbox()
+    theme.clients_widget.refresh = function()
+        theme.clients_widget.widget.text =
+            get_screen_clients(awful.screen.focused())
+    end
+
+    local tags = awful.screen.focused().selected_tags
+
+    for _, tag in ipairs(tags) do
+        tag:connect_signal("request::select",
+                           function() theme.clients_widget.refresh() end)
+    end
 end
 
 function theme.at_screen_connect(s)
@@ -290,15 +313,21 @@ function theme.at_screen_connect(s)
     s.mywibox = awful.wibar({position = "top", screen = s})
 
     -- Add widgets to the wibox
+
     s.mywibox.widget = {
         layout = wibox.layout.align.horizontal,
-        expand = "none",
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             s.mytaglist,
             s.mypromptbox
         },
-        s.mytasklist, -- Middle widget
+        {
+            layout = wibox.layout.align.horizontal,
+            theme.clients_widget.widget,
+            s.mytasklist,
+            wibox.widget.textbox(" "),
+            expand = "outside"
+        },
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             s.mylayoutbox,

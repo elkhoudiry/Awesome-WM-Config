@@ -171,6 +171,9 @@ theme.volume_widget = {}
 theme.time_date_widget = {}
 theme.connectivity_widget = {}
 theme.clients_widget = {}
+theme.cpu_widget = {}
+theme.gpu_widget = {}
+theme.memory_widget = {}
 
 awful.keyboard.append_global_keybindings({
     awful.key({modkey}, "space", function() theme.language_widget.switch() end,
@@ -201,6 +204,10 @@ function theme.init_widgets()
     theme.language_widget = basic_widgets.basic_kb_layout({"us", "ar"})
     theme.volume_widget = basic_widgets.basic_volume()
     theme.time_date_widget = basic_widgets.basic_time_date()
+    theme.cpu_widget = basic_widgets.basic_cpu_sensors()
+    theme.gpu_widget = basic_widgets.basic_gpu_sensors()
+    theme.memory_widget = basic_widgets.basic_memory()
+
     theme.connectivity_widget =
         basic_widgets.basic_connectivity({"enp59s0"}, -- =>
         {"wlp0s20f3"})
@@ -333,14 +340,26 @@ function theme.at_screen_connect(s)
             s.mylayoutbox,
             wibox.widget.textbox(" "),
             wibox.widget.systray(),
+            theme.gpu_widget.widget,
+            theme.cpu_widget.widget,
+            theme.memory_widget.widget,
             theme.connectivity_widget.widget,
-            -- connection_widget.widget,
             theme.volume_widget.widget,
             theme.battery_widget.widget,
             theme.language_widget.widget,
             theme.time_date_widget.widget
         }
     }
+end
+
+function theme.refresh_widgets()
+    theme.connectivity_widget.refresh()
+    theme.battery_widget.refresh()
+    theme.volume_widget.refresh()
+    theme.clients_widget.refresh()
+    theme.cpu_widget.refresh()
+    theme.gpu_widget.refresh()
+    theme.memory_widget.refresh()
 end
 
 return theme

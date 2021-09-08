@@ -73,12 +73,8 @@ end)
 awful.screen.connect_for_each_screen(
     function(s) beautiful.at_screen_connect(s) end)
 
-refreshTimer:connect_signal("timeout", function()
-    beautiful.connectivity_widget.refresh()
-    beautiful.battery_widget.refresh()
-    beautiful.volume_widget.refresh()
-    beautiful.clients_widget.refresh()
-end)
+refreshTimer:connect_signal("timeout",
+                            function() beautiful.refresh_widgets() end)
 refreshTimer:start()
 
 -- Mouse bindings

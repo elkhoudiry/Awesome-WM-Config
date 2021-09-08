@@ -7,6 +7,79 @@ local basic_module = {}
 local space = common.txt_space
 
 -- [[ ################################################################### ]] --
+-- [[ ############# GPU HELPER FUNCTIONS #############
+
+local function set_memory_widget(memory_package)
+    memory_package.icon_container.widget.text = --
+    space .. memory_package.icon .. space
+    memory_package.memory_container.widget.markup = --
+    space .. common.bold_markup(memory_package.memory)
+    memory_package.swap_container.widget.markup = --
+    " - " .. common.bold_markup(memory_package.swap) .. space
+end
+
+local function get_memory_usage(callback)
+    local memory_cmd = "free -h | awk '/^Mem:/ { print $3 }'"
+    local swap_cmd = "free -h | awk '/^Swap:/ { print $3 }'"
+
+    awful.spawn.easy_async_with_shell(memory_cmd, function(memory) --
+        awful.spawn.easy_async_with_shell(swap_cmd, function(swap)
+            callback(memory, swap)
+        end)
+    end)
+end
+
+-- [[ ################################################################### ]] --
+-- [[ ############# GPU HELPER FUNCTIONS #############
+
+local function set_gpu_widget(gpu_package)
+    gpu_package.icon_container.widget.text = --
+    space .. gpu_package.icon .. space
+    gpu_package.temp_container.widget.markup = --
+    space .. common.bold_markup(gpu_package.temp .. " C") .. space
+end
+
+local function get_gpu_temp(callback)
+    local cmd = "nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader"
+    awful.spawn.easy_async_with_shell(cmd, function(temp) --
+        callback(temp)
+    end)
+end
+
+-- [[ ################################################################### ]] --
+-- [[ ############# CPU HELPER FUNCTIONS #############
+
+local function set_cpu_widget(cpu_package)
+    cpu_package.icon_container.widget.text = --
+    space .. cpu_package.icon .. space
+    cpu_package.temp_container.widget.markup = --
+    space .. common.bold_markup(cpu_package.temp .. " C")
+    cpu_package.usage_container.widget.markup = --
+    space .. common.bold_markup(cpu_package.usage .. " %") .. space
+end
+
+local function get_cpu_temp(callback)
+    local cmd = "sensors | awk '/Package id/{print $4}'"
+    awful.spawn.easy_async_with_shell(cmd, function(temp) --
+        callback(string.sub(temp, 2, string.len(temp) - 3))
+    end)
+end
+
+local function get_cpu_usage(callback)
+    local cmd = " echo $(sh $HOME/.config/awesome/shell_scripts/cpu/usage.sh)"
+    awful.spawn.easy_async_with_shell(cmd, function(usage) -- 
+        callback(usage)
+    end)
+end
+
+local function get_cpu_intensive_process(callback)
+    local cmd = "ps axch -o cmd:15,%cpu --sort=-%cpu | head"
+    awful.spawn.easy_async_with_shell(cmd, function(out) callback(out) end)
+end
+
+-- ]]
+
+-- [[ ################################################################### ]] --
 -- [[ ############# BATTERY HELPER FUNCTIONS #############
 
 local function get_basic_battery(battery_name, callback)
@@ -459,6 +532,130 @@ function basic_module.basic_battery(battery_name)
 
     battery_package.refresh()
     return battery_package
+end
+-- ]]
+
+-- [[ ################################################################### ]] --
+-- [[ ############# CPU WIDGET #############
+
+function basic_module.basic_cpu_sensors()
+    local cpu_package = {}
+
+    cpu_package.icon = ""
+    cpu_package.temp = "0C"
+    cpu_package.usage = "0%"
+
+    cpu_package.icon_container = wibox.container.background()
+    cpu_package.temp_container = wibox.container.background()
+    cpu_package.usage_container = wibox.container.background()
+
+    cpu_package.icon_container.widget = wibox.widget.textbox()
+    cpu_package.temp_container.widget = wibox.widget.textbox()
+    cpu_package.usage_container.widget = wibox.widget.textbox()
+
+    cpu_package.refresh = function()
+        get_cpu_temp(function(temp) --
+            cpu_package.temp = temp
+            get_cpu_usage(function(usage) --
+                cpu_package.usage = tostring(tonumber(usage))
+                set_cpu_widget(cpu_package)
+            end)
+        end)
+    end
+
+    cpu_package.widget = wibox.widget {
+        cpu_package.icon_container,
+        cpu_package.temp_container,
+        cpu_package.usage_container,
+        layout = wibox.layout.align.horizontal
+    }
+
+    local tooltip = awful.tooltip {objects = {cpu_package.widget}}
+    tooltip.visible = false
+
+    cpu_package.widget:connect_signal("mouse::enter", function()
+        tooltip.visible = true
+        tooltip.text = ""
+        get_cpu_intensive_process(function(out) tooltip.text = out end)
+    end)
+
+    cpu_package.widget:connect_signal("mouse::leave", function() --
+        tooltip.visible = false
+    end)
+
+    cpu_package.refresh()
+
+    return cpu_package
+end
+-- ]]
+
+-- [[ ################################################################### ]] --
+-- [[ ############# GPU WIDGET #############
+
+function basic_module.basic_gpu_sensors()
+    local memory_package = {}
+
+    memory_package.icon = ""
+    memory_package.temp = "0C"
+
+    memory_package.icon_container = wibox.container.background()
+    memory_package.temp_container = wibox.container.background()
+
+    memory_package.icon_container.widget = wibox.widget.textbox()
+    memory_package.temp_container.widget = wibox.widget.textbox()
+
+    memory_package.refresh = function()
+        get_gpu_temp(function(temp) --
+            memory_package.temp = tostring(tonumber(temp))
+            set_gpu_widget(memory_package)
+        end)
+    end
+
+    memory_package.widget = wibox.widget {
+        memory_package.icon_container,
+        memory_package.temp_container,
+        layout = wibox.layout.align.horizontal
+    }
+
+    memory_package.refresh()
+
+    return memory_package
+end
+-- ]]
+
+function basic_module.basic_memory()
+    local memory_package = {}
+
+    memory_package.icon = "﬙"
+    memory_package.memory = ""
+    memory_package.swap = ""
+
+    memory_package.icon_container = wibox.container.background()
+    memory_package.memory_container = wibox.container.background()
+    memory_package.swap_container = wibox.container.background()
+
+    memory_package.icon_container.widget = wibox.widget.textbox()
+    memory_package.memory_container.widget = wibox.widget.textbox()
+    memory_package.swap_container.widget = wibox.widget.textbox()
+
+    memory_package.refresh = function()
+        get_memory_usage(function(memory, swap) --
+            memory_package.memory = memory
+            memory_package.swap = swap
+            set_memory_widget(memory_package)
+        end)
+    end
+
+    memory_package.widget = wibox.widget {
+        memory_package.icon_container,
+        memory_package.memory_container,
+        memory_package.swap_container,
+        layout = wibox.layout.align.horizontal
+    }
+
+    memory_package.refresh()
+
+    return memory_package
 end
 -- ]]
 

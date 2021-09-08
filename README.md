@@ -27,3 +27,23 @@ boosted volume.
 
 non boosted volume.  
 ![Non Boosted volume](imgs/non_boosted_vol.png)
+
+### Cpu Widget
+
+showing cpu temp, usage and most intensive processes on hover  
+![Cpu widget](imgs/top_intensive.png)
+
+### Gpu widget
+
+showing "NVIDIA" gpu temp  
+![Gpu widget](imgs/gpu.png)
+
+### Packages widget
+
+showing number of installed pacman packages  
+![Packages widget](imgs/packages.png)
+
+### Memory widget
+
+showing how much memory and swap is being used  
+![Memory widget](imgs/memory.png)

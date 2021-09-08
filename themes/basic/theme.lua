@@ -174,6 +174,7 @@ theme.clients_widget = {}
 theme.cpu_widget = {}
 theme.gpu_widget = {}
 theme.memory_widget = {}
+theme.packages_widget = {}
 
 local refreshTimer = timer({timeout = 5})
 
@@ -212,6 +213,7 @@ function theme.init_widgets()
     theme.cpu_widget = basic_widgets.basic_cpu_sensors()
     theme.gpu_widget = basic_widgets.basic_gpu_sensors()
     theme.memory_widget = basic_widgets.basic_memory()
+    theme.packages_widget = basic_widgets.basic_packages()
 
     theme.connectivity_widget =
         basic_widgets.basic_connectivity({"enp59s0"}, -- =>
@@ -348,6 +350,7 @@ function theme.at_screen_connect(s)
             theme.gpu_widget.widget,
             theme.cpu_widget.widget,
             theme.memory_widget.widget,
+            theme.packages_widget.widget,
             theme.connectivity_widget.widget,
             theme.volume_widget.widget,
             theme.battery_widget.widget,
@@ -365,6 +368,7 @@ function theme.refresh_widgets()
     theme.cpu_widget.refresh()
     theme.gpu_widget.refresh()
     theme.memory_widget.refresh()
+    theme.packages_widget.refresh()
 end
 
 return theme

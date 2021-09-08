@@ -7,6 +7,24 @@ local basic_module = {}
 local space = common.txt_space
 
 -- [[ ################################################################### ]] --
+-- [[ ############# PACKAGES HELPER FUNCTIONS #############
+
+local function set_packages_widget(packages_package)
+    packages_package.icon_container.widget.text = --
+    space .. packages_package.icon .. space
+    packages_package.packages_container.widget.markup = --
+    space .. common.bold_markup(packages_package.packages) .. space
+end
+
+local function get_installed_packages(callback)
+    local cmd = "pacman -Q | wc -l "
+    awful.spawn.easy_async_with_shell(cmd, function(number) --
+        callback(number)
+    end)
+end
+-- ]]
+
+-- [[ ################################################################### ]] --
 -- [[ ############# GPU HELPER FUNCTIONS #############
 
 local function set_memory_widget(memory_package)
@@ -28,6 +46,7 @@ local function get_memory_usage(callback)
         end)
     end)
 end
+-- ]]
 
 -- [[ ################################################################### ]] --
 -- [[ ############# GPU HELPER FUNCTIONS #############
@@ -45,6 +64,7 @@ local function get_gpu_temp(callback)
         callback(temp)
     end)
 end
+-- ]]
 
 -- [[ ################################################################### ]] --
 -- [[ ############# CPU HELPER FUNCTIONS #############
@@ -76,7 +96,6 @@ local function get_cpu_intensive_process(callback)
     local cmd = "ps axch -o cmd:15,%cpu --sort=-%cpu | head"
     awful.spawn.easy_async_with_shell(cmd, function(out) callback(out) end)
 end
-
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -659,6 +678,40 @@ function basic_module.basic_memory()
     memory_package.refresh()
 
     return memory_package
+end
+-- ]]
+
+-- [[ ################################################################### ]] --
+-- [[ ############# MEMORY WIDGET #############
+
+function basic_module.basic_packages()
+    local packages_package = {}
+
+    packages_package.icon = ""
+    packages_package.packages = ""
+
+    packages_package.icon_container = wibox.container.background()
+    packages_package.packages_container = wibox.container.background()
+
+    packages_package.icon_container.widget = wibox.widget.textbox()
+    packages_package.packages_container.widget = wibox.widget.textbox()
+
+    packages_package.refresh = function()
+        get_installed_packages(function(number) --
+            packages_package.packages = number
+            set_packages_widget(packages_package)
+        end)
+    end
+
+    packages_package.widget = wibox.widget {
+        packages_package.icon_container,
+        packages_package.packages_container,
+        layout = wibox.layout.align.horizontal
+    }
+
+    packages_package.refresh()
+
+    return packages_package
 end
 -- ]]
 

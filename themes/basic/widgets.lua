@@ -623,6 +623,9 @@ function basic_module.basic_gpu_sensors()
 end
 -- ]]
 
+-- [[ ################################################################### ]] --
+-- [[ ############# MEMORY WIDGET #############
+
 function basic_module.basic_memory()
     local memory_package = {}
 

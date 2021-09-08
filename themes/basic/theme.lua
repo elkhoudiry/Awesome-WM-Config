@@ -175,6 +175,11 @@ theme.cpu_widget = {}
 theme.gpu_widget = {}
 theme.memory_widget = {}
 
+local refreshTimer = timer({timeout = 5})
+
+refreshTimer:connect_signal("timeout", function() theme.refresh_widgets() end)
+refreshTimer:start()
+
 awful.keyboard.append_global_keybindings({
     awful.key({modkey}, "space", function() theme.language_widget.switch() end,
               {description = "switch keyboard layout", group = "custom"}),

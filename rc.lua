@@ -19,8 +19,6 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.hotkeys_popup.keys")
 
-local refreshTimer = timer({timeout = 5})
-
 debugging_str = ""
 
 -- {{{ Error handling
@@ -72,10 +70,6 @@ end)
 
 awful.screen.connect_for_each_screen(
     function(s) beautiful.at_screen_connect(s) end)
-
-refreshTimer:connect_signal("timeout",
-                            function() beautiful.refresh_widgets() end)
-refreshTimer:start()
 
 -- Mouse bindings
 awful.mouse.append_global_mousebindings({

@@ -25,7 +25,7 @@ end
 -- ]]
 
 -- [[ ################################################################### ]] --
--- [[ ############# GPU HELPER FUNCTIONS #############
+-- [[ ############# MEMORY HELPER FUNCTIONS #############
 
 local function set_memory_widget(memory_package)
     memory_package.icon_container.widget.text = --

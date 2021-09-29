@@ -331,6 +331,11 @@ ruled.client.connect_signal("request::rules", function()
         properties = {opacity = 1, maximized = false, floating = false}
     }
 
+    ruled.client.append_rule {
+        rule = {class = "Google-chrome"},
+        properties = {opacity = 1, maximized = false, floating = false}
+    }
+
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- ruled.client.append_rule {
     --     rule       = { class = "Firefox"     },

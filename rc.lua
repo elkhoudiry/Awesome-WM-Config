@@ -336,6 +336,11 @@ ruled.client.connect_signal("request::rules", function()
         properties = {opacity = 1, maximized = false, floating = false}
     }
 
+    ruled.client.append_rule {
+        rule = { class = "AppDebug" },
+        properties = { screen = 1 } 
+    }
+
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- ruled.client.append_rule {
     --     rule       = { class = "Firefox"     },
@@ -406,7 +411,7 @@ end)
 -- Auto Start apps
 do
     local autostarts = {
-        "flameshot", "picom --experimental-backends --backend glx"
+        "lxpolkit &", "flameshot", "arandr", 
     }
 
     for _, i in pairs(autostarts) do

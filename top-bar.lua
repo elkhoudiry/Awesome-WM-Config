@@ -1,4 +1,5 @@
 local awful        = require("awful")
+local gears        = require("gears")
 local wibox        = require("wibox")
 local naughty      = require("naughty")
 local beautiful    = require("beautiful")
@@ -32,6 +33,12 @@ local function get_tag_on_primary_color(desktop, tag)
     return color
 end
 
+local function get_tag_normal_color(desktop, tag)
+    local color
+    if (tag.selected) then color = desktop.color else color = globals.colors.background end
+    return color
+end
+
 -- Generate taglist squares:
 local taglist_square_size       = xresources.apply_dpi(4)
 beautiful.taglist_squares_sel   = theme_assets.taglist_squares_sel(
@@ -41,11 +48,12 @@ beautiful.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
     taglist_square_size, globals.colors.white
 )
 local function update_tag_properties(widget, desktop, tag)
-    local background_color                            = get_tag_primary_color(desktop, tag)
-    local on_background_color                         = get_tag_on_primary_color(desktop, tag)
-    widget:get_children_by_id('texts_role')[1].markup = get_desktop_markup(desktop, tag)
-    widget:get_children_by_id('underline_role')[1].bg = on_background_color
-    beautiful.taglist_bg_focus                        = background_color
+    local background_color                                 = get_tag_primary_color(desktop, tag)
+    local on_background_color                              = get_tag_on_primary_color(desktop, tag)
+    local normal_color                                     = get_tag_normal_color(desktop, tag)
+    widget:get_children_by_id('tag_text_role')[1].markup   = get_desktop_markup(desktop, tag)
+    widget:get_children_by_id('tag_underline_role')[1].bg  = on_background_color
+    widget:get_children_by_id('tag_background_role')[1].bg = normal_color
 end
 
 -- Keyboard map indicator and switcher
@@ -79,31 +87,35 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         filter          = awful.widget.taglist.filter.all,
         style           = {
             font = globals.font.full_modified(6),
+            shape = gears.shape.rounded_rect
         },
         layout          = {
-            spacing = 4,
+            spacing = 2,
             layout  = wibox.layout.fixed.horizontal
         },
         widget_template = {
             {
                 {
                     {
-                        id     = "texts_role",
+                        id     = "tag_text_role",
                         align  = "center",
                         widget = wibox.widget.textbox,
                     },
-                    {
-                        id            = "underline_role",
-                        forced_height = 6,
-                        widget        = wibox.container.background,
-                    },
-                    layout = wibox.layout.fixed.vertical,
+                    left   = 2,
+                    right  = 2,
+                    widget = wibox.container.margin
                 },
-                left   = 0,
-                right  = 0,
-                widget = wibox.container.margin
+                {
+                    id            = "tag_underline_role",
+                    forced_height = 6,
+                    widget        = wibox.container.background,
+                },
+                layout = wibox.layout.fixed.vertical,
             },
-            id              = 'background_role',
+            id              = "tag_background_role",
+            shape           = function(cr, width, height)
+                return gears.shape.partially_rounded_rect(cr, width, height, false, false, false, false, 4)
+            end,
             widget          = wibox.container.background,
             create_callback = function(self, tag, index, objects) --luacheck: no unused args
                 local desktop = globals.tags[index]
@@ -139,7 +151,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         filter          = awful.widget.tasklist.filter.currenttags,
         layout          = {
             spacing = 10,
-            layout  = wibox.layout.flex.horizontal
+            layout  = wibox.layout.fixed.horizontal
         },
         widget_template = {
             {
@@ -154,8 +166,8 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     },
                     layout = wibox.layout.fixed.horizontal,
                 },
-                left   = 10,
-                right  = 10,
+                left   = 2,
+                right  = 2,
                 widget = wibox.container.margin
             },
             id     = 'background_role',
@@ -175,6 +187,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
     screen.top_bar_widget = awful.wibar {
         position = "top",
         screen   = screen,
+        bg       = beautiful.bg_normal .. "00",
         widget   = {
             layout = wibox.layout.align.horizontal,
             {
@@ -183,7 +196,13 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                 screen.desktops_list_widget,
                 screen.run_widget,
             },
-            screen.tasks_list_widget, -- Middle widget,
+            {
+                layout = wibox.layout.align.horizontal,
+                wibox.widget.textbox(""),
+                screen.tasks_list_widget,
+                wibox.widget.textbox(" "),
+                expand = "outside"
+            },
             {
                 -- Right widgets
                 layout = wibox.layout.fixed.horizontal,

@@ -14,7 +14,7 @@ local themes_path         = gfs.get_themes_dir()
 local theme               = {}
 
 theme.font                = globals.font.theme
-theme.wallpaper           = "~/Wallpapers/1223603.jpg"
+theme.wallpaper           = "~/Wallpapers/1221463.jpg"
 
 theme.bg_normal           = "#222222"
 theme.bg_focus            = "#535d6c"
@@ -27,8 +27,8 @@ theme.fg_focus            = "#ffffff"
 theme.fg_urgent           = "#ffffff"
 theme.fg_minimize         = "#ffffff"
 
-theme.useless_gap         = dpi(0)
-theme.border_width        = dpi(1)
+theme.useless_gap         = dpi(6)
+theme.border_width        = dpi(2)
 theme.border_color_normal = "#000000"
 theme.border_color_active = "#535d6c"
 theme.border_color_marked = "#91231c"

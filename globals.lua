@@ -20,6 +20,7 @@ globals.colors = {
     your_pink = "#FEc7bc",
     sea_green = "#218b82",
     orangish = "#f27348",
+    background = "#222222",
     white = "#ffffff"
 }
 

@@ -411,7 +411,7 @@ end)
 -- Auto Start apps
 do
     local autostarts = {
-        "lxpolkit &", "flameshot", "arandr", 
+        "lxpolkit &", "flameshot", "arandr", "mictray" 
     }
 
     for _, i in pairs(autostarts) do

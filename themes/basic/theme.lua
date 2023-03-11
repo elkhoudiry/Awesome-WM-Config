@@ -18,7 +18,7 @@ local theme = {}
 
 local modkey = "Mod4"
 
-theme.font = "TerminessTTF Nerd Font 10"
+theme.font = "TerminessTTF Nerd Font 12"
 theme.taglist_font = "RobotoMono Nerd Font 9"
 
 theme.bg_normal = "#222222"

@@ -15,14 +15,18 @@ templetes.ids.top_bar_task_text_role       = "top_bar_task_text_role"
 
 templetes.underlineable                    = function(widget)
     return {
-        widget,
         {
-            id            = templetes.ids.top_bar_underline_role,
-            forced_height = 2,
-            bg            = globals.tags.current().color_ontop,
-            widget        = wibox.container.background,
+            widget,
+            {
+                id            = templetes.ids.top_bar_underline_role,
+                forced_height = 4,
+                bg            = globals.tags.current().color_ontop,
+                widget        = wibox.container.background,
+            },
+            layout = wibox.layout.fixed.vertical,
         },
-        layout = wibox.layout.fixed.vertical,
+        forced_height = 10,
+        widget = wibox.widget.background
     }
 end
 
@@ -39,12 +43,13 @@ templetes.top_bar_item                     = {
             widget = wibox.container.margin
         }),
         margins = 0,
-        widget = wibox.container.margin
+        widget  = wibox.container.margin
     },
     id     = templetes.ids.top_bar_background_role,
     widget = wibox.container.background,
     shape  = function(cr, width, height)
-        return gears.shape.partially_rounded_rect(cr, width, height, true, true, true, true, 4)
+        return gears.shape.partially_rounded_rect(cr, width, height, true, true, true, true,
+            globals.dimensions.corners_radius)
     end,
 }
 
@@ -67,7 +72,8 @@ templetes.top_bar_task_item                = {
     id     = templetes.ids.top_bar_task_background_role,
     widget = wibox.container.background,
     shape  = function(cr, width, height)
-        return gears.shape.partially_rounded_rect(cr, width, height, true, true, true, true, 4)
+        return gears.shape.partially_rounded_rect(cr, width, height, true, true, true, true,
+            globals.dimensions.corners_radius)
     end,
 }
 

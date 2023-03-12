@@ -465,3 +465,7 @@ end)
 client.connect_signal("mouse::enter", function(c)
     c:activate { context = "mouse_enter", raise = false }
 end)
+
+client.connect_signal("request::titlebars", function(c)
+    awful.titlebar.hide(c)
+end)

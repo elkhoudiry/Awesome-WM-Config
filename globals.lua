@@ -1,22 +1,29 @@
-local awful                         = require("awful")
-local xresources                    = require("beautiful.xresources")
+local awful                              = require("awful")
+local xresources                         = require("beautiful.xresources")
 
-local globals                       = {}
+local globals                            = {}
 
-globals.font                        = {}
-globals.font.size                   = 10
-globals.font.name                   = "Caskaydia Cove Nerd Font"
-globals.font.theme                  = globals.font.name .. " " .. globals.font.size
-globals.font.full_modified          = function(size)
+globals.font                             = {}
+globals.font.size                        = 10
+globals.font.name                        = "Caskaydia Cove Nerd Font"
+globals.font.theme                       = globals.font.name .. " " .. globals.font.size
+globals.font.full_modified               = function(size)
     return globals.font.name .. " " .. globals.font.size + size
 end
 
-globals.dimensions                  = {}
-globals.dimensions.gap_size         = xresources.apply_dpi(4)
-globals.dimensions.border_width     = xresources.apply_dpi(3)
-globals.dimensions.top_bar_height   = 34
+globals.dimensions                       = {}
+globals.dimensions.gap_size              = 4
+globals.dimensions.border_width          = 4
+globals.dimensions.top_bar_height        = 34
 
-globals.colors                      = {
+globals.dimensions.spacing               = {}
+globals.dimensions.spacing.tags          = 0
+globals.dimensions.spacing.tasks         = 0
+globals.dimensions.spacing.notifications = 0
+
+globals.dimensions.corners_radius        = 0
+
+globals.colors                           = {
     crimson = "#dc143c",
     turquoise = "#b6d8f2",
     tonys_pink = "#e6a57e",
@@ -31,10 +38,10 @@ globals.colors                      = {
     background = "#222222",
     white = "#ffffff"
 }
-globals.colors.alpha                = "a8"
-globals.colors.wallpaper_tint_alpha = "20"
+globals.colors.alpha                     = "a8" -- Hex value
+globals.colors.wallpaper_tint_alpha      = "20" -- Hex value
 
-globals.tags                        = {
+globals.tags                             = {
     {
         name = "dev",
         icon = "󰀴",

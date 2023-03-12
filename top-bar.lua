@@ -143,7 +143,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
             shape = gears.shape.rounded_rect
         },
         layout          = {
-            spacing = 2,
+            spacing = globals.dimensions.spacing.tags,
             layout  = wibox.layout.fixed.horizontal
         },
         widget_template = {
@@ -181,7 +181,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         screen          = screen,
         filter          = awful.widget.tasklist.filter.currenttags,
         layout          = {
-            spacing = 2,
+            spacing = globals.dimensions.spacing.tasks,
             layout  = wibox.layout.fixed.horizontal
         },
         widget_template = {
@@ -194,8 +194,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                 update_tasks_properties(self, screen, desktop, client)
             end,
             update_callback = function(self, client, index, objects) --luacheck: no unused args
-                local desktop = globals.tags[client.first_tag.index]
-                update_tasks_properties(self, screen, desktop, client)
+
             end
         },
         buttons         = {

@@ -1,37 +1,34 @@
-local globals             = require("globals")
+local globals       = require("globals")
 ---------------------------
 -- Default awesome theme --
 ---------------------------
 
-local theme_assets        = require("beautiful.theme_assets")
-local xresources          = require("beautiful.xresources")
-local rnotification       = require("ruled.notification")
-local dpi                 = xresources.apply_dpi
+local theme_assets  = require("beautiful.theme_assets")
+local xresources    = require("beautiful.xresources")
+local rnotification = require("ruled.notification")
+local dpi           = xresources.apply_dpi
 
-local gfs                 = require("gears.filesystem")
-local themes_path         = gfs.get_themes_dir()
+local gfs           = require("gears.filesystem")
+local themes_path   = gfs.get_themes_dir()
 
-local theme               = {}
+local theme         = {}
 
-theme.font                = globals.font.theme
-theme.wallpaper           = "~/Wallpapers/1221463.jpg"
+theme.font          = globals.font.theme
+theme.wallpaper     = "~/Wallpapers/550739.jpg"
 
-theme.bg_normal           = "#222222"
-theme.bg_focus            = "#535d6c"
-theme.bg_urgent           = "#ff0000"
-theme.bg_minimize         = "#444444"
-theme.bg_systray          = theme.bg_normal
+theme.bg_normal     = "#222222"
+theme.bg_focus      = "#535d6c"
+theme.bg_urgent     = "#ff0000"
+theme.bg_minimize   = "#444444"
+theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal           = "#aaaaaa"
-theme.fg_focus            = "#ffffff"
-theme.fg_urgent           = "#ffffff"
-theme.fg_minimize         = "#ffffff"
+theme.fg_normal     = "#aaaaaa"
+theme.fg_focus      = "#ffffff"
+theme.fg_urgent     = "#ffffff"
+theme.fg_minimize   = "#ffffff"
 
-theme.useless_gap         = dpi(6)
-theme.border_width        = dpi(2)
-theme.border_color_normal = "#000000"
-theme.border_color_active = "#535d6c"
-theme.border_color_marked = "#91231c"
+theme.useless_gap   = globals.dimensions.gap_size
+theme.border_width  = globals.dimensions.border_width
 
 -- There are other variable sets
 -- overriding the default one when

@@ -6,8 +6,8 @@ local beautiful    = require("beautiful")
 local theme_assets = require("beautiful.theme_assets")
 local xresources   = require("beautiful.xresources")
 
-
-local globals = require("globals")
+local templetes    = require("templetes")
+local globals      = require("globals")
 
 -- {{{ Wibar
 
@@ -47,14 +47,35 @@ beautiful.taglist_squares_sel   = theme_assets.taglist_squares_sel(
 beautiful.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
     taglist_square_size, globals.colors.white
 )
-local function update_tag_properties(widget, desktop, tag)
-    local background_color                                 = get_tag_primary_color(desktop, tag)
-    local on_background_color                              = get_tag_on_primary_color(desktop, tag)
-    local normal_color                                     = get_tag_normal_color(desktop, tag)
-    widget:get_children_by_id('tag_text_role')[1].markup   = get_desktop_markup(desktop, tag)
-    widget:get_children_by_id('tag_underline_role')[1].bg  = on_background_color
-    widget:get_children_by_id('tag_background_role')[1].bg = normal_color
+local function update_tag_properties(widget, screen, desktop, tag)
+    local primary_color                                                    = get_tag_primary_color(desktop, tag)
+    local on_primary_color                                                 = get_tag_on_primary_color(desktop, tag)
+    local normal_color                                                     = get_tag_normal_color(desktop, tag)
+    widget:get_children_by_id(templetes.ids.top_bar_text_role)[1].markup   = get_desktop_markup(desktop, tag)
+    widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg  = on_primary_color
+    widget:get_children_by_id(templetes.ids.top_bar_background_role)[1].bg = normal_color
+    if tag.index == screen.selected_tag.index then
+        beautiful.border_color_active = primary_color
+        beautiful.border_color_normal = on_primary_color
+    end
 end
+
+local function update_tasks_properties(widget, screen, desktop, client)
+    local tag                                                                 = client.first_tag
+    local primary_color                                                       = get_tag_primary_color(desktop, tag)
+    widget:get_children_by_id(templetes.ids.top_bar_task_icon_role)[1].client = client
+    client:connect_signal("focus", function()
+        widget:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = primary_color
+        if client.border_color ~= primary_color then
+            client.border_color = primary_color
+        end
+    end)
+    client:connect_signal("unfocus", function()
+        widget:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = globals.colors.background
+        client.border_color = desktop.color_ontop
+    end)
+end
+
 
 -- Keyboard map indicator and switcher
 local keyboard_layout_indicator_widget = awful.widget.keyboardlayout()
@@ -90,40 +111,19 @@ screen.connect_signal("request::desktop_decoration", function(screen)
             shape = gears.shape.rounded_rect
         },
         layout          = {
-            spacing = 2,
+            spacing = -1,
             layout  = wibox.layout.fixed.horizontal
         },
         widget_template = {
-            {
-                {
-                    {
-                        id     = "tag_text_role",
-                        align  = "center",
-                        widget = wibox.widget.textbox,
-                    },
-                    left   = 2,
-                    right  = 2,
-                    widget = wibox.container.margin
-                },
-                {
-                    id            = "tag_underline_role",
-                    forced_height = 6,
-                    widget        = wibox.container.background,
-                },
-                layout = wibox.layout.fixed.vertical,
-            },
-            id              = "tag_background_role",
-            shape           = function(cr, width, height)
-                return gears.shape.partially_rounded_rect(cr, width, height, false, false, false, false, 4)
-            end,
-            widget          = wibox.container.background,
+            templetes.top_bar_item,
+            widget = wibox.container.margin,
             create_callback = function(self, tag, index, objects) --luacheck: no unused args
                 local desktop = globals.tags[index]
-                update_tag_properties(self, desktop, tag)
+                update_tag_properties(self, screen, desktop, tag)
             end,
             update_callback = function(self, tag, index, objects) --luacheck: no unused args
                 local desktop = globals.tags[index]
-                update_tag_properties(self, desktop, tag)
+                update_tag_properties(self, screen, desktop, tag)
             end,
         },
         buttons         = {
@@ -150,28 +150,21 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         screen          = screen,
         filter          = awful.widget.tasklist.filter.currenttags,
         layout          = {
-            spacing = 10,
+            spacing = 2,
             layout  = wibox.layout.fixed.horizontal
         },
         widget_template = {
-            {
-                {
-                    {
-                        {
-                            id     = 'icon_role',
-                            widget = wibox.widget.imagebox,
-                        },
-                        margins = 2,
-                        widget  = wibox.container.margin,
-                    },
-                    layout = wibox.layout.fixed.horizontal,
-                },
-                left   = 2,
-                right  = 2,
-                widget = wibox.container.margin
-            },
-            id     = 'background_role',
-            widget = wibox.container.background,
+            templetes.top_bar_task_item,
+            widget = wibox.container.margin,
+            create_callback = function(self, client, index, objects) --luacheck: no unused args
+                local desktop = globals.tags[client.first_tag.index]
+                self:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = globals.colors.background
+                update_tasks_properties(self, screen, desktop, client)
+            end,
+            update_callback = function(self, client, index, objects) --luacheck: no unused args
+                local desktop = globals.tags[client.first_tag.index]
+                update_tasks_properties(self, screen, desktop, client)
+            end
         },
         buttons         = {
             awful.button({}, 1, function(c)
@@ -188,29 +181,36 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         position = "top",
         screen   = screen,
         bg       = beautiful.bg_normal .. "00",
+        height   = globals.dimensions.top_bar_height,
         widget   = {
-            layout = wibox.layout.align.horizontal,
-            {
-                -- Left widgets
-                layout = wibox.layout.fixed.horizontal,
-                screen.desktops_list_widget,
-                screen.run_widget,
-            },
             {
                 layout = wibox.layout.align.horizontal,
-                wibox.widget.textbox(""),
-                screen.tasks_list_widget,
-                wibox.widget.textbox(" "),
-                expand = "outside"
+                {
+                    -- Left widgets
+                    layout = wibox.layout.fixed.horizontal,
+                    screen.desktops_list_widget,
+                    screen.run_widget,
+                },
+                {
+                    layout = wibox.layout.align.horizontal,
+                    wibox.widget.textbox(""),
+                    screen.tasks_list_widget,
+                    wibox.widget.textbox(" "),
+                    expand = "outside"
+                },
+                {
+                    -- Right widgets
+                    layout = wibox.layout.fixed.horizontal,
+                    keyboard_layout_indicator_widget,
+                    wibox.widget.systray(),
+                    text_clock_widget,
+                    screen.tiling_layouts_widget,
+                },
             },
-            {
-                -- Right widgets
-                layout = wibox.layout.fixed.horizontal,
-                keyboard_layout_indicator_widget,
-                wibox.widget.systray(),
-                text_clock_widget,
-                screen.tiling_layouts_widget,
-            },
+            left = globals.dimensions.gap_size * 1.85,
+            right = globals.dimensions.gap_size * 1.85,
+            top = globals.dimensions.gap_size * 1.85,
+            widget = wibox.container.margin
         }
     }
 end)

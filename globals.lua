@@ -1,14 +1,21 @@
-local globals = {}
+local xresources                  = require("beautiful.xresources")
 
-globals.font = {}
-globals.font.size = 10
-globals.font.name = "Caskaydia Cove Nerd Font"
-globals.font.theme = globals.font.name .. " " .. globals.font.size
-globals.font.full_modified = function(size)
+local globals                     = {}
+
+globals.font                      = {}
+globals.font.size                 = 10
+globals.font.name                 = "Caskaydia Cove Nerd Font"
+globals.font.theme                = globals.font.name .. " " .. globals.font.size
+globals.font.full_modified        = function(size)
     return globals.font.name .. " " .. globals.font.size + size
 end
 
-globals.colors = {
+globals.dimensions                = {}
+globals.dimensions.gap_size       = xresources.apply_dpi(4)
+globals.dimensions.border_width   = xresources.apply_dpi(3)
+globals.dimensions.top_bar_height = 34
+
+globals.colors                    = {
     crimson = "#dc143c",
     turquoise = "#b6d8f2",
     tonys_pink = "#e6a57e",
@@ -18,17 +25,17 @@ globals.colors = {
     salmon = "#f9968b",
     sienna = "#874741",
     your_pink = "#FEc7bc",
-    sea_green = "#218b82",
+    green = "#77c077",
     orangish = "#f27348",
     background = "#222222",
     white = "#ffffff"
 }
 
-globals.tags = {
+globals.tags                      = {
     {
         name = "dev",
         icon = "󰀴",
-        color = globals.colors.sea_green,
+        color = globals.colors.green,
         color_ontop = globals.colors.white
     },
     {

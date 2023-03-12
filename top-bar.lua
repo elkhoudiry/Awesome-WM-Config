@@ -62,6 +62,8 @@ local function update_tag_properties(widget, screen, desktop, tag)
         screen.run_widget[1][2][1].bg = primary_color
         screen.run_widget[1][2][1].bg_cursor = on_primary_color
         screen.run_widget[1][2][1].fg_cursor = primary_color
+        awful.wallpaper.tint.bg = primary_color .. globals.colors.wallpaper_tint_alpha
+        awful.wallpaper.refresh_tint(screen)
     end
 end
 
@@ -69,6 +71,7 @@ local function update_tasks_properties(widget, screen, desktop, client)
     local tag                                                                 = client.first_tag
     local primary_color                                                       = get_tag_primary_color(desktop, tag)
     widget:get_children_by_id(templetes.ids.top_bar_task_icon_role)[1].client = client
+    widget:get_children_by_id(templetes.ids.top_bar_task_text_role)[1].text   = client.name
     client:connect_signal("focus", function()
         widget:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = primary_color ..
             globals.colors.alpha
@@ -174,7 +177,6 @@ screen.connect_signal("request::desktop_decoration", function(screen)
     }
 
     -- Create a tasklist widget
-    beautiful.tasklist_disable_task_name = true
     screen.tasks_list_widget = awful.widget.tasklist {
         screen          = screen,
         filter          = awful.widget.tasklist.filter.currenttags,

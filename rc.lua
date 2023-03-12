@@ -21,6 +21,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+local globals = require("globals")
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -72,26 +74,36 @@ require("./tiling-layouts")
 require("./top-bar")
 
 -- {{{ Wallpaper
-screen.connect_signal("request::wallpaper", function(s)
+awful.wallpaper.tint = {
+    widget = wibox.container.background
+}
+local wallpaper_widget = {
+    image     = beautiful.wallpaper,
+    upscale   = true,
+    downscale = true,
+    widget    = wibox.widget.imagebox,
+}
+local wallpaper_container = {
+    {
+        wallpaper_widget,
+        awful.wallpaper.tint,
+        layout = wibox.layout.stack
+    },
+    valign = "center",
+    halign = "center",
+    tiled  = false,
+    widget = wibox.container.tile,
+}
+awful.wallpaper.refresh_tint = function(screen)
     awful.wallpaper {
-        screen = s,
-        widget = {
-            {
-                image     = beautiful.wallpaper,
-                upscale   = true,
-                downscale = true,
-                widget    = wibox.widget.imagebox,
-            },
-            valign = "center",
-            halign = "center",
-            tiled  = false,
-            widget = wibox.container.tile,
-        }
+        screen = screen,
+        widget = wallpaper_container
     }
+end
+screen.connect_signal("request::wallpaper", function(s)
+    awful.wallpaper.refresh_tint(s)
 end)
 -- }}}
-
-
 
 -- {{{ Mouse bindings
 awful.mouse.append_global_mousebindings({

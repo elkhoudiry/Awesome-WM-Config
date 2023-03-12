@@ -11,6 +11,7 @@ local globals      = require("globals")
 
 -- {{{ Wibar
 
+
 local function get_desktop_markup(desktop, tag)
     local icon_color
     if (tag.selected) then icon_color = desktop.color_ontop else icon_color = desktop.color end
@@ -53,10 +54,14 @@ local function update_tag_properties(widget, screen, desktop, tag)
     local normal_color                                                     = get_tag_normal_color(desktop, tag)
     widget:get_children_by_id(templetes.ids.top_bar_text_role)[1].markup   = get_desktop_markup(desktop, tag)
     widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg  = on_primary_color
-    widget:get_children_by_id(templetes.ids.top_bar_background_role)[1].bg = normal_color
-    if tag.index == screen.selected_tag.index then
+    widget:get_children_by_id(templetes.ids.top_bar_background_role)[1].bg = normal_color .. globals.colors.alpha
+    if tag.index == screen.selected_tag.index and beautiful.border_color_active ~= primary_color then
         beautiful.border_color_active = primary_color
         beautiful.border_color_normal = on_primary_color
+        screen.run_widget[1][2][1].fg = on_primary_color
+        screen.run_widget[1][2][1].bg = primary_color
+        screen.run_widget[1][2][1].bg_cursor = on_primary_color
+        screen.run_widget[1][2][1].fg_cursor = primary_color
     end
 end
 
@@ -65,7 +70,8 @@ local function update_tasks_properties(widget, screen, desktop, client)
     local primary_color                                                       = get_tag_primary_color(desktop, tag)
     widget:get_children_by_id(templetes.ids.top_bar_task_icon_role)[1].client = client
     client:connect_signal("focus", function()
-        widget:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = primary_color
+        widget:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = primary_color ..
+            globals.colors.alpha
         if client.border_color ~= primary_color then
             client.border_color = primary_color
         end
@@ -88,7 +94,30 @@ screen.connect_signal("request::desktop_decoration", function(screen)
     awful.tag({ "", "", "", "", "" }, screen, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
-    screen.run_widget = awful.widget.prompt()
+    screen.run_widget = {
+        {
+            {
+                widget = wibox.widget.imagebox,
+            },
+            {
+                awful.widget.prompt(
+                    {
+                        fg = globals.tags.current().color_ontop,
+                        bg = globals.tags.current().color,
+                        font = globals.font.full_modified(-1)
+                    }
+                ),
+                widget = wibox.container.background,
+            },
+            {
+                forced_height = 2,
+                bg            = globals.tags.current().color_ontop,
+                widget        = wibox.container.background,
+            },
+            layout = wibox.layout.align.vertical,
+        },
+        widget = wibox.container.background
+    }
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
@@ -111,7 +140,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
             shape = gears.shape.rounded_rect
         },
         layout          = {
-            spacing = -1,
+            spacing = 2,
             layout  = wibox.layout.fixed.horizontal
         },
         widget_template = {
@@ -158,7 +187,8 @@ screen.connect_signal("request::desktop_decoration", function(screen)
             widget = wibox.container.margin,
             create_callback = function(self, client, index, objects) --luacheck: no unused args
                 local desktop = globals.tags[client.first_tag.index]
-                self:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = globals.colors.background
+                self:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = globals.colors.background ..
+                    globals.colors.alpha
                 update_tasks_properties(self, screen, desktop, client)
             end,
             update_callback = function(self, client, index, objects) --luacheck: no unused args
@@ -189,6 +219,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     -- Left widgets
                     layout = wibox.layout.fixed.horizontal,
                     screen.desktops_list_widget,
+                    templetes.horizontal_spacer(4),
                     screen.run_widget,
                 },
                 {

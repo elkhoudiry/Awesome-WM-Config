@@ -1,3 +1,4 @@
+local awful                       = require("awful")
 local xresources                  = require("beautiful.xresources")
 
 local globals                     = {}
@@ -30,6 +31,7 @@ globals.colors                    = {
     background = "#222222",
     white = "#ffffff"
 }
+globals.colors.alpha              = "a8"
 
 globals.tags                      = {
     {
@@ -63,5 +65,18 @@ globals.tags                      = {
         color_ontop = globals.colors.white
     },
 }
+
+
+globals.tags.current = function()
+    local current = globals.tags[awful.screen.focused().selected_tag]
+
+    if current ~= nil then
+        current = globals.tags[awful.screen.focused().selected_tag.index]
+    else
+        current = globals.tags[1]
+    end
+
+    return current
+end
 
 return globals

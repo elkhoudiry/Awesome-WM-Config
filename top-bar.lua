@@ -11,8 +11,7 @@ local globals      = require("globals")
 
 -- {{{ Wibar
 
-
-local function get_desktop_markup(desktop, tag)
+local function get_tag_markup(desktop, tag)
     local icon_color
     if (tag.selected) then icon_color = desktop.color_ontop else icon_color = desktop.color end
     return string.format(
@@ -20,6 +19,24 @@ local function get_desktop_markup(desktop, tag)
         icon_color, desktop.icon,
         desktop.color_ontop, desktop.name
     )
+end
+
+local function get_focused_task_markup(desktop, client)
+    local length = utf8.len(client.name)
+    local name
+
+    if length > 50 then
+        name = utf8.sub(client.name, 1, 25) .. " ... " .. utf8.sub(client.name, length - 25, length)
+    else
+        name = client.name
+    end
+
+    return string.format("<span foreground=\"%s\">%s</span>", desktop.color_ontop, string.lower(name))
+end
+
+local function get_unfocused_task_markup(desktop, client)
+    return string.format("<span foreground=\"%s\">%s</span>", desktop.color_ontop .. globals.colors.alpha,
+        string.lower(client.class))
 end
 
 local function get_tag_primary_color(desktop, tag)
@@ -52,7 +69,7 @@ local function update_tag_properties(widget, screen, desktop, tag)
     local primary_color                                                    = get_tag_primary_color(desktop, tag)
     local on_primary_color                                                 = get_tag_on_primary_color(desktop, tag)
     local normal_color                                                     = get_tag_normal_color(desktop, tag)
-    widget:get_children_by_id(templetes.ids.top_bar_text_role)[1].markup   = get_desktop_markup(desktop, tag)
+    widget:get_children_by_id(templetes.ids.top_bar_text_role)[1].markup   = get_tag_markup(desktop, tag)
     widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg  = on_primary_color
     widget:get_children_by_id(templetes.ids.top_bar_background_role)[1].bg = normal_color .. globals.colors.alpha
     if tag.index == screen.selected_tag.index and beautiful.border_color_active ~= primary_color then
@@ -70,18 +87,37 @@ end
 local function update_tasks_properties(widget, screen, desktop, client)
     local tag                                                                 = client.first_tag
     local primary_color                                                       = get_tag_primary_color(desktop, tag)
+    local on_primary_color                                                    = get_tag_on_primary_color(desktop, tag)
     widget:get_children_by_id(templetes.ids.top_bar_task_icon_role)[1].client = client
-    widget:get_children_by_id(templetes.ids.top_bar_task_text_role)[1].text   = client.name
+    widget:get_children_by_id(templetes.ids.top_bar_task_text_role)[1].color  = on_primary_color
     client:connect_signal("focus", function()
         widget:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = primary_color ..
             globals.colors.alpha
+        widget:get_children_by_id(templetes.ids.top_bar_task_text_role)[1].markup = get_focused_task_markup(desktop,
+            client)
+
+        client.isfocused = true
+
         if client.border_color ~= primary_color then
             client.border_color = primary_color
         end
     end)
     client:connect_signal("unfocus", function()
+        widget:get_children_by_id(templetes.ids.top_bar_task_text_role)[1].markup = get_unfocused_task_markup(desktop,
+            client)
         widget:get_children_by_id(templetes.ids.top_bar_task_background_role)[1].bg = globals.colors.background
+
         client.border_color = desktop.color_ontop
+        client.isfocused = false
+    end)
+    client:connect_signal("property::name", function()
+        local markup
+        if client.isfocused then
+            markup = get_focused_task_markup(desktop, client)
+        else
+            markup = get_unfocused_task_markup(desktop, client)
+        end
+        widget:get_children_by_id(templetes.ids.top_bar_task_text_role)[1].markup = markup
     end)
 end
 
@@ -138,10 +174,6 @@ screen.connect_signal("request::desktop_decoration", function(screen)
     screen.desktops_list_widget = awful.widget.taglist {
         screen          = screen,
         filter          = awful.widget.taglist.filter.all,
-        style           = {
-            font = globals.font.full_modified(6),
-            shape = gears.shape.rounded_rect
-        },
         layout          = {
             spacing = globals.dimensions.spacing.tags,
             layout  = wibox.layout.fixed.horizontal
@@ -207,6 +239,13 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         }
     }
 
+    screen.top_padding = awful.wibar {
+        position = "top",
+        screen   = screen,
+        bg       = beautiful.bg_normal .. 00,
+        height   = globals.dimensions.gap_size * 1.85,
+    }
+
     -- Create the wibox
     screen.top_bar_widget = awful.wibar {
         position = "top",
@@ -214,6 +253,11 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         bg       = beautiful.bg_normal .. "00",
         height   = globals.dimensions.top_bar_height,
         widget   = {
+            layout = wibox.layout.align.horizontal,
+            {
+                left = globals.dimensions.gap_size * 1.85,
+                widget = wibox.container.margin
+            },
             {
                 layout = wibox.layout.align.horizontal,
                 {
@@ -239,10 +283,10 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     screen.tiling_layouts_widget,
                 },
             },
-            left = globals.dimensions.gap_size * 1.85,
-            right = globals.dimensions.gap_size * 1.85,
-            top = globals.dimensions.gap_size * 1.85,
-            widget = wibox.container.margin
+            {
+                left = globals.dimensions.gap_size * 1.85,
+                widget = wibox.container.margin
+            },
         }
     }
 end)

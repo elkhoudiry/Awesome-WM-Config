@@ -13,38 +13,41 @@ templetes.ids.top_bar_task_background_role = "top_bar_task_background_role"
 templetes.ids.top_bar_task_icon_role       = "top_bar_task_icon_role"
 templetes.ids.top_bar_task_text_role       = "top_bar_task_text_role"
 
-templetes.underlineable                    = function(widget)
+local function underline_shape(cr, width, height)
+    cr:move_to(0, 0)
+    cr:line_to(width, 0)
+    cr:line_to(width, height - height / 2)
+    cr:line_to(width - height / 2, height)
+    cr:line_to(0, height)
+    cr:close_path()
+end
+
+templetes.underlineable     = function(widget)
     return {
+        widget,
         {
-            widget,
             {
-                id            = templetes.ids.top_bar_underline_role,
-                forced_height = 4,
-                bg            = globals.tags.current().color_ontop,
-                widget        = wibox.container.background,
+                widget = wibox.container.margin
             },
-            layout = wibox.layout.fixed.vertical,
+            id            = templetes.ids.top_bar_underline_role,
+            forced_height = 26,
+            widget        = wibox.container.background,
         },
-        forced_height = 10,
-        widget = wibox.widget.background
+        layout = wibox.layout.fixed.vertical
     }
 end
 
-templetes.top_bar_item                     = {
-    {
-        templetes.underlineable({
-            {
-                id     = templetes.ids.top_bar_text_role,
-                align  = "center",
-                widget = wibox.widget.textbox,
-            },
-            left   = 2,
-            right  = 2,
-            widget = wibox.container.margin
-        }),
-        margins = 0,
-        widget  = wibox.container.margin
-    },
+templetes.top_bar_item      = {
+    templetes.underlineable({
+        {
+            id     = templetes.ids.top_bar_text_role,
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        left   = globals.dimensions.margin / 2,
+        right  = globals.dimensions.margin / 2,
+        widget = wibox.container.margin
+    }),
     id     = templetes.ids.top_bar_background_role,
     widget = wibox.container.background,
     shape  = function(cr, width, height)
@@ -53,7 +56,7 @@ templetes.top_bar_item                     = {
     end,
 }
 
-templetes.top_bar_task_item                = {
+templetes.top_bar_task_item = {
     {
         {
             {
@@ -61,12 +64,14 @@ templetes.top_bar_task_item                = {
                 widget = awful.widget.clienticon,
             },
             {
-                id     = templetes.ids.top_bar_task_text_role,
-                widget = wibox.widget.textbox,
+                id        = templetes.ids.top_bar_task_text_role,
+                ellipsize = "middle",
+                widget    = wibox.widget.textbox,
             },
-            layout = wibox.layout.fixed.vertical,
+            spacing = globals.dimensions.margin,
+            layout = wibox.layout.fixed.horizontal,
         },
-        margins = 4,
+        margins = globals.dimensions.margin,
         widget = wibox.container.margin
     },
     id     = templetes.ids.top_bar_task_background_role,
@@ -77,7 +82,7 @@ templetes.top_bar_task_item                = {
     end,
 }
 
-templetes.horizontal_spacer                = function(space)
+templetes.horizontal_spacer = function(space)
     return {
         text = " ",
         widget = wibox.widget.textbox

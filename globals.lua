@@ -1,5 +1,6 @@
 local awful                              = require("awful")
 local xresources                         = require("beautiful.xresources")
+local naughty                            = require("naughty")
 
 local globals                            = {}
 
@@ -14,7 +15,7 @@ end
 globals.dimensions                       = {}
 globals.dimensions.gap_size              = 4
 globals.dimensions.border_width          = 4
-globals.dimensions.top_bar_height        = 34
+globals.dimensions.top_bar_height        = 28
 
 globals.dimensions.spacing               = {}
 globals.dimensions.spacing.tags          = 0
@@ -22,6 +23,7 @@ globals.dimensions.spacing.tasks         = 0
 globals.dimensions.spacing.notifications = 0
 
 globals.dimensions.corners_radius        = 0
+globals.dimensions.margin                = 4
 
 globals.colors                           = {
     crimson = "#dc143c",
@@ -85,6 +87,18 @@ globals.tags.current = function()
     end
 
     return current
+end
+
+
+function Debug_notification(something)
+    naughty.notify({ text = tostring(something) })
+end
+
+-- Simple version without bounds-checking.
+function utf8.sub(s, i, j)
+    i = utf8.offset(s, i)
+    j = utf8.offset(s, j + 1) - 1
+    return string.sub(s, i, j)
 end
 
 return globals

@@ -38,6 +38,7 @@ globals.colors                           = {
     green = "#77c077",
     orangish = "#f27348",
     background = "#222222",
+    on_background = "#ffffff",
     white = "#ffffff"
 }
 globals.colors.alpha                     = "a8" -- Hex value
@@ -94,7 +95,6 @@ function Debug_notification(something)
     naughty.notify({ text = tostring(something) })
 end
 
--- Simple version without bounds-checking.
 function utf8.sub(s, i, j)
     i = utf8.offset(s, i)
     j = utf8.offset(s, j + 1) - 1

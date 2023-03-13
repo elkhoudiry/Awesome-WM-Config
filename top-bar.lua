@@ -1,25 +1,18 @@
-local awful        = require("awful")
-local gears        = require("gears")
-local wibox        = require("wibox")
-local naughty      = require("naughty")
-local beautiful    = require("beautiful")
-local theme_assets = require("beautiful.theme_assets")
-local xresources   = require("beautiful.xresources")
+local awful           = require("awful")
+local gears           = require("gears")
+local wibox           = require("wibox")
+local naughty         = require("naughty")
+local beautiful       = require("beautiful")
+local theme_assets    = require("beautiful.theme_assets")
+local xresources      = require("beautiful.xresources")
+local keyboard_layout = require("keyboard-layout-widget")
 
-local templetes    = require("templetes")
-local globals      = require("globals")
+require("global-utils")
+local globals   = require("globals")
+local templetes = require("templetes")
+
 
 -- {{{ Wibar
-
-local function get_tag_markup(desktop, tag)
-    local icon_color
-    if (tag.selected) then icon_color = desktop.color_ontop else icon_color = desktop.color end
-    return string.format(
-        "<span font_size=\"4pt\"> </span><span foreground=\"%s\" font_size=\"15pt\">%s</span><span foreground=\"%s\" rise=\"2pt\"> %s</span><span font_size=\"4pt\"> </span>",
-        icon_color, desktop.icon,
-        desktop.color_ontop, desktop.name
-    )
-end
 
 local function get_focused_task_markup(desktop, client)
     local length = utf8.len(client.name)
@@ -57,6 +50,7 @@ local function get_tag_normal_color(desktop, tag)
     return color
 end
 
+
 -- Generate taglist squares:
 local taglist_square_size       = xresources.apply_dpi(4)
 beautiful.taglist_squares_sel   = theme_assets.taglist_squares_sel(
@@ -66,10 +60,16 @@ beautiful.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
     taglist_square_size, globals.colors.white
 )
 local function update_tag_properties(widget, screen, desktop, tag)
-    local primary_color                                                    = get_tag_primary_color(desktop, tag)
-    local on_primary_color                                                 = get_tag_on_primary_color(desktop, tag)
-    local normal_color                                                     = get_tag_normal_color(desktop, tag)
-    widget:get_children_by_id(templetes.ids.top_bar_text_role)[1].markup   = get_tag_markup(desktop, tag)
+    local primary_color    = get_tag_primary_color(desktop, tag)
+    local on_primary_color = get_tag_on_primary_color(desktop, tag)
+    local normal_color     = get_tag_normal_color(desktop, tag)
+    local icon_color
+    if tag.selected then icon_color = desktop.color_ontop else icon_color = desktop.color end
+    widget:get_children_by_id(templetes.ids.top_bar_text_role)[1].markup   = text.icon_title_markup(
+        desktop.icon,
+        desktop.name,
+        icon_color, desktop.color_ontop
+    )
     widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg  = on_primary_color
     widget:get_children_by_id(templetes.ids.top_bar_background_role)[1].bg = normal_color .. globals.colors.alpha
     if tag.index == screen.selected_tag.index and beautiful.border_color_active ~= primary_color then
@@ -277,7 +277,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                 {
                     -- Right widgets
                     layout = wibox.layout.fixed.horizontal,
-                    keyboard_layout_indicator_widget,
+                    keyboard_layout.widget,
                     wibox.widget.systray(),
                     text_clock_widget,
                     screen.tiling_layouts_widget,
@@ -290,5 +290,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         }
     }
 end)
+
+keyboard_layout.init()
 
 -- }}}

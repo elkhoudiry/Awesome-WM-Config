@@ -11,6 +11,7 @@ local globals         = require("globals")
 local templetes       = require("templetes")
 local keyboard_layout = require("keyboard-layout-widget")
 local memory          = require("memory-widget")
+local cpu             = require("cpu-widget")
 -- {{{ Wibar
 
 local function get_focused_task_markup(desktop, client)
@@ -278,6 +279,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     layout = wibox.layout.fixed.horizontal,
                     keyboard_layout.widget,
                     memory.widget,
+                    cpu.widget,
                     wibox.widget.systray(),
                     text_clock_widget,
                     screen.tiling_layouts_widget,

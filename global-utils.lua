@@ -16,6 +16,14 @@ function text.extract_number(s)
     return tonumber(string.sub(s, string.find(s, "%d+%.?%d*")))
 end
 
+function text.extract_number_single_poing(s)
+    return tonumber(string.sub(s, string.find(s, "%d+%.?%d")))
+end
+
+function text.extract_number_integer(s)
+    return tonumber(string.sub(s, string.find(s, "%d+")))
+end
+
 function arrays.indexOf(array, value)
     for i, v in ipairs(array) do
         if v == value then

@@ -290,7 +290,4 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         }
     }
 end)
-
-keyboard_layout.init()
-
 -- }}}

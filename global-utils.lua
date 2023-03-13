@@ -1,5 +1,6 @@
----@diagnostic disable-next-line: lowercase-global
+---@diagnostic disable: lowercase-global
 text = {}
+arrays = {}
 
 function text.icon_title_markup(icon, text, icon_color, text_color)
     return string.format(
@@ -7,4 +8,13 @@ function text.icon_title_markup(icon, text, icon_color, text_color)
         icon_color, icon,
         text_color, text
     )
+end
+
+function arrays.indexOf(array, value)
+    for i, v in ipairs(array) do
+        if v == value then
+            return i
+        end
+    end
+    return nil
 end

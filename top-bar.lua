@@ -1,17 +1,16 @@
-local awful           = require("awful")
-local gears           = require("gears")
-local wibox           = require("wibox")
-local naughty         = require("naughty")
-local beautiful       = require("beautiful")
-local theme_assets    = require("beautiful.theme_assets")
-local xresources      = require("beautiful.xresources")
-local keyboard_layout = require("keyboard-layout-widget")
+local awful        = require("awful")
+local gears        = require("gears")
+local wibox        = require("wibox")
+local naughty      = require("naughty")
+local beautiful    = require("beautiful")
+local theme_assets = require("beautiful.theme_assets")
+local xresources   = require("beautiful.xresources")
 
 require("global-utils")
-local globals   = require("globals")
-local templetes = require("templetes")
-
-
+local globals         = require("globals")
+local templetes       = require("templetes")
+local keyboard_layout = require("keyboard-layout-widget")
+local memory          = require("memory-widget")
 -- {{{ Wibar
 
 local function get_focused_task_markup(desktop, client)
@@ -278,6 +277,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     -- Right widgets
                     layout = wibox.layout.fixed.horizontal,
                     keyboard_layout.widget,
+                    memory.widget,
                     wibox.widget.systray(),
                     text_clock_widget,
                     screen.tiling_layouts_widget,

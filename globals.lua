@@ -37,6 +37,7 @@ globals.colors                           = {
     your_pink = "#FEc7bc",
     green = "#77c077",
     orangish = "#f27348",
+    purple = "#a15d98",
     background = "#222222",
     on_background = "#ffffff",
     white = "#ffffff"

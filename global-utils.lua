@@ -1,6 +1,8 @@
 ---@diagnostic disable: lowercase-global
+local awful = require("awful")
 text = {}
 arrays = {}
+shell = {}
 
 function text.icon_title_markup(icon, text, icon_color, text_color)
     return string.format(
@@ -10,6 +12,10 @@ function text.icon_title_markup(icon, text, icon_color, text_color)
     )
 end
 
+function text.extract_number(s)
+    return tonumber(string.sub(s, string.find(s, "%d+%.?%d*")))
+end
+
 function arrays.indexOf(array, value)
     for i, v in ipairs(array) do
         if v == value then
@@ -17,4 +23,10 @@ function arrays.indexOf(array, value)
         end
     end
     return nil
+end
+
+function shell.single_line(command, cb)
+    awful.spawn.easy_async_with_shell(command, function(result)
+        cb(string.gsub(result, "\n", ""))
+    end)
 end

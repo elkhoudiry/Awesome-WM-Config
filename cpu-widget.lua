@@ -45,7 +45,7 @@ cpu.refresh = function()
         else
             shell.single_line(cpu_usage_command, function(usage)
                 local cpu_text = tostring(temperature) .. "c - " .. string.lower(usage)
-                local color = globals.colors.crimson
+                local color = globals.colors.error
                 local markup = text.icon_title_markup("󰻠",
                     cpu_text,
                     color,

@@ -24,7 +24,7 @@ memory.widget      = wibox.widget {
 }
 
 memory.init        = function()
-    memory.widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg = globals.colors.purple
+    memory.widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg = globals.colors.purplish
     memory.refresh()
 end
 
@@ -40,7 +40,7 @@ memory.refresh     = function()
             local ram = text.extract_number_single_poing(used_value / 1024 / 1024) .. "Gi"
             local ram_text = string.lower(string.sub(ram, 1, string.len(ram) - 1))
             if (used_value * 100 / total_value) > globals.limits.ram_percent then is_critical = true else is_critical = false end
-            if is_critical then color = globals.colors.error else color = globals.colors.purple end
+            if is_critical then color = globals.colors.error else color = globals.colors.purplish end
 
             if swap_value > 0 then
                 local swap_text = string.sub(swap, 1, string.len(swap) - 1)

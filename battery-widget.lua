@@ -33,7 +33,7 @@ battery.refresh        = function()
         shell.single_line(capacity_command, function(capacity)
             local is_charging
             local icon
-            local color = globals.colors.orangish
+            local color = globals.colors.light_gray
             local capacity_value = tonumber(capacity)
 
             local text_widget = battery.widget:get_children_by_id(templetes.ids.top_bar_text_role)[1]

@@ -25,7 +25,7 @@ volume.widget       = wibox.widget {
     widget = wibox.container.background
 }
 
-volume.widget.color = globals.colors.salmon
+volume.widget.color = globals.colors.light_green
 
 volume.init         = function()
     volume.refresh()

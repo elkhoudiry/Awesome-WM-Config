@@ -32,7 +32,7 @@ globals.limits.gpu_temp                  = 70
 globals.limits.download_speed            = 800 * 1024
 
 globals.colors                           = {
-    crimson = "#dc143c",
+    crimson = "#c54b6c",
     turquoise = "#b6d8f2",
     tonys_pink = "#e6a57e",
     pink = "#eb96aa",
@@ -43,7 +43,12 @@ globals.colors                           = {
     your_pink = "#FEc7bc",
     green = "#77c077",
     orangish = "#f27348",
-    purple = "#a15d98",
+    purplish = "#dc828f",
+    gold = "#90cdc3",
+    light_gray = "#dbbc8e",
+    light_green = "#2cced2",
+    chatelle = "#ff815e",
+    purple = "#b28dff",
     success = "#77c077",
     error = "#dc143c",
     background = "#222222",
@@ -69,7 +74,7 @@ globals.tags                             = {
     {
         name = "files",
         icon = "󰉋",
-        color = globals.colors.salmon,
+        color = globals.colors.purple,
         color_ontop = globals.colors.white
     },
     {

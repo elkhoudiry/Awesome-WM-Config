@@ -75,7 +75,7 @@ network.refresh = function()
             local text_widget = network.widget.children[index].widget.children[1]
             local underline_widget = network.widget.children[index].widget.children[2]
             local is_connected
-            local color = globals.colors.your_pink
+            local color = globals.colors.chatelle
 
             if string.sub(is_connected_match, 2, string.len(is_connected_match)) == "connected" then
                 is_connected = true

@@ -14,6 +14,8 @@ local memory          = require("memory-widget")
 local cpu             = require("cpu-widget")
 local gpu             = require("gpu-widget")
 local network         = require("network-monitor")
+local battery         = require("battery-widget")
+
 -- {{{ Wibar
 
 local function get_focused_task_markup(desktop, client)
@@ -280,6 +282,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     -- Right widgets
                     layout = wibox.layout.fixed.horizontal,
                     keyboard_layout.widget,
+                    battery.widget,
                     memory.widget,
                     gpu.widget,
                     cpu.widget,

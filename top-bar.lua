@@ -16,6 +16,7 @@ local gpu             = require("gpu-widget")
 local network         = require("network-monitor")
 local battery         = require("battery-widget")
 local volume          = require("volume-widget")
+local clock           = require("textclock-widget")
 -- {{{ Wibar
 
 local function get_focused_task_markup(desktop, client)
@@ -124,13 +125,6 @@ local function update_tasks_properties(widget, screen, desktop, client)
         widget:get_children_by_id(templetes.ids.top_bar_task_text_role)[1].markup = markup
     end)
 end
-
-
--- Keyboard map indicator and switcher
-local keyboard_layout_indicator_widget = awful.widget.keyboardlayout()
-
--- Create a textclock widget
-local text_clock_widget                = wibox.widget.textclock()
 
 screen.connect_signal("request::desktop_decoration", function(screen)
     -- Each screen has its own tag table.
@@ -281,6 +275,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                 {
                     -- Right widgets
                     layout = wibox.layout.fixed.horizontal,
+                    wibox.widget.systray(),
                     keyboard_layout.widget,
                     battery.widget,
                     memory.widget,
@@ -288,8 +283,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     cpu.widget,
                     network.widget,
                     volume.widget,
-                    wibox.widget.systray(),
-                    text_clock_widget,
+                    clock.widget,
                     screen.tiling_layouts_widget,
                 },
             },

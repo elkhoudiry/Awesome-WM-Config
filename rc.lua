@@ -116,7 +116,7 @@ awful.mouse.append_global_mousebindings({
 
 -- General Awesome keys
 awful.keyboard.append_global_keybindings({
-    awful.key({ modkey, }, "s", hotkeys_popup.show_help,
+    awful.key({ modkey, "Shift", }, "s", hotkeys_popup.show_help,
         { description = "show help", group = "awesome" }),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
         { description = "reload awesome", group = "awesome" }),
@@ -467,3 +467,32 @@ end)
 client.connect_signal("request::titlebars", function(c)
     awful.titlebar.hide(c)
 end)
+
+awful.keyboard.append_global_keybindings({
+    awful.key({ modkey }, "w", function() awful.spawn("firefox") end,
+        { description = "launch firefox", group = "custom" }),
+    awful.key({ modkey }, "f", function() awful.spawn("thunar") end,
+        { description = "launch thunar", group = "custom" }),
+    awful.key({}, "Print", function() awful.spawn("flameshot screen -c") end,
+        { description = "take full screenshot", group = "custom" }),
+    awful.key({ "Shift" }, "Print", function() awful.spawn("flameshot gui") end,
+        { description = "take custom screenshot", group = "custom" }),
+    awful.key({ modkey }, "s", function() awful.spawn("flameshot gui") end,
+        { description = "take custom screenshot", group = "custom" })
+})
+
+-- Auto Start apps
+do
+    local autostarts = {
+        "lxpolkit &", "flameshot", "arandr", "mictray", "slack", "discord"
+    }
+
+    for _, i in pairs(autostarts) do
+        awful.spawn.easy_async_with_shell('ps -C ' .. i .. ' |wc -l',
+            function(stdout, stderr, reason,
+                     exit_code)
+                gears.debug.dump(stdout)
+                if tonumber(stdout) or 0 < 2 then awful.spawn.once(i) end
+            end)
+    end
+end

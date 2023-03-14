@@ -89,17 +89,18 @@ network.refresh = function()
                 local current_time = os.time()
                 local rx = (current_rx - text_widget.rx) / (current_time - text_widget.time)
                 local tx = (current_tx - text_widget.tx) / (current_time - text_widget.time)
-
-                if rx > globals.limits.download_speed then
-                    color = globals.colors.success
-                end
-
-                text_widget.markup = text.icon_title_markup(
+                local markup = text.icon_title_markup(
                     "󰌘",
                     get_printable_speed(rx) .. " " .. get_printable_speed(tx),
                     color,
                     globals.colors.on_background
                 )
+                if rx > globals.limits.download_speed then
+                    color = globals.colors.success
+                end
+
+
+                text_widget.markup = markup
                 text_widget.rx = current_rx
                 text_widget.tx = current_tx
                 text_widget.time = current_time

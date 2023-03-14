@@ -70,7 +70,7 @@ battery.refresh        = function()
             underline_widget.bg = color
             text_widget.markup = text.icon_title_markup(
                 icon,
-                capacity,
+                capacity .. "%",
                 color,
                 globals.colors.on_background
             )

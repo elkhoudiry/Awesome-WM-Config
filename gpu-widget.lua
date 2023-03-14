@@ -37,7 +37,7 @@ gpu.refresh     = function()
             color = globals.colors.error
         end
 
-        local markup = text.icon_title_markup("󰹑",
+        local markup = text.icon_title_markup("",
             result .. "c",
             color,
             globals.colors.on_background

@@ -13,16 +13,7 @@ templetes.ids.top_bar_task_background_role = "top_bar_task_background_role"
 templetes.ids.top_bar_task_icon_role       = "top_bar_task_icon_role"
 templetes.ids.top_bar_task_text_role       = "top_bar_task_text_role"
 
-local function underline_shape(cr, width, height)
-    cr:move_to(0, 0)
-    cr:line_to(width, 0)
-    cr:line_to(width, height - height / 2)
-    cr:line_to(width - height / 2, height)
-    cr:line_to(0, height)
-    cr:close_path()
-end
-
-templetes.underlineable     = function(widget)
+templetes.underlineable                    = function(widget)
     return {
         widget,
         {
@@ -37,7 +28,7 @@ templetes.underlineable     = function(widget)
     }
 end
 
-templetes.top_bar_item      = {
+templetes.top_bar_item                     = {
     templetes.underlineable({
         {
             id     = templetes.ids.top_bar_text_role,
@@ -56,7 +47,7 @@ templetes.top_bar_item      = {
     end,
 }
 
-templetes.top_bar_task_item = {
+templetes.top_bar_task_item                = {
     {
         {
             {
@@ -82,7 +73,7 @@ templetes.top_bar_task_item = {
     end,
 }
 
-templetes.horizontal_spacer = function(space)
+templetes.horizontal_spacer                = function(space)
     return {
         text = " ",
         widget = wibox.widget.textbox

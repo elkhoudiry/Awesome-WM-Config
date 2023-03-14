@@ -25,7 +25,7 @@ cpu.widget                = wibox.widget {
 }
 
 function cpu.init()
-    cpu.widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg = globals.colors.turquoise
+    cpu.widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg = globals.colors.gold
     cpu.refresh()
 end
 
@@ -34,7 +34,7 @@ cpu.refresh = function()
         local temperature = text.extract_number_integer(temperature)
         if temperature < globals.limits.cpu_temp then
             local cpu_text = tostring(temperature) .. "c"
-            local color = globals.colors.turquoise
+            local color = globals.colors.gold
             local markup = text.icon_title_markup("󰻠",
                 cpu_text,
                 color,

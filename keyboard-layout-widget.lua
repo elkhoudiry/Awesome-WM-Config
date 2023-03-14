@@ -25,14 +25,14 @@ keyboard_layout.widget   = wibox.widget {
 }
 
 keyboard_layout.init     = function()
-    keyboard_layout.widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg = globals.colors.gold
+    keyboard_layout.widget:get_children_by_id(templetes.ids.top_bar_underline_role)[1].bg = globals.colors.turquoise
     keyboard_layout.refresh()
 end
 
 keyboard_layout.refresh  = function()
     awful.spawn.easy_async_with_shell(get_layout_command, function(result)
         local layout = string.gsub(result, "\n", "")
-        local markup = text.icon_title_markup("󰇧", layout, globals.colors.gold, globals.colors.on_background)
+        local markup = text.icon_title_markup("󰇧", layout, globals.colors.turquoise, globals.colors.on_background)
         keyboard_layout.widget:get_children_by_id(templetes.ids.top_bar_text_role)[1].markup = markup
     end)
 end

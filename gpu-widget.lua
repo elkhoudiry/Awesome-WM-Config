@@ -32,7 +32,7 @@ gpu.refresh     = function()
         local color
 
         if tonumber(result) < globals.limits.gpu_temp then
-            color = globals.colors.turquoise
+            color = globals.colors.gold
         else
             color = globals.colors.error
         end

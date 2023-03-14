@@ -15,7 +15,7 @@ local cpu             = require("cpu-widget")
 local gpu             = require("gpu-widget")
 local network         = require("network-monitor")
 local battery         = require("battery-widget")
-
+local volume          = require("volume-widget")
 -- {{{ Wibar
 
 local function get_focused_task_markup(desktop, client)
@@ -287,6 +287,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     gpu.widget,
                     cpu.widget,
                     network.widget,
+                    volume.widget,
                     wibox.widget.systray(),
                     text_clock_widget,
                     screen.tiling_layouts_widget,
@@ -299,4 +300,20 @@ screen.connect_signal("request::desktop_decoration", function(screen)
         }
     }
 end)
+
+gears.timer {
+    timeout   = 5,
+    call_now  = true,
+    autostart = true,
+    callback  = function()
+        keyboard_layout.refresh()
+        battery.refresh()
+        memory.refresh()
+        gpu.refresh()
+        cpu.refresh()
+        network.refresh()
+        volume.refresh()
+    end
+}
+
 -- }}}

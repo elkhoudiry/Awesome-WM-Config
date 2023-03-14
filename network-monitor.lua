@@ -1,5 +1,6 @@
 local awful = require("awful")
 local wibox = require("wibox")
+local gears = require("gears")
 
 require("global-utils")
 local globals   = require("globals")
@@ -44,6 +45,7 @@ network.init    = function()
                 tx     = 0,
                 rx     = 0,
                 time   = 0,
+                locked = false,
                 fg     = globals.colors.on_background,
                 widget = wibox.widget.textbox,
             }),
@@ -59,6 +61,12 @@ end
 
 network.refresh = function()
     local command = cmd(table.concat(network.nics, " "))
+    local text_widget = network.widget.children[1].widget.children[1]
+
+    if text_widget.locked then return end
+
+    text_widget.locked = true
+
     shell.single_line(command, function(result)
         local splits = text.split(result, " || ")
 
@@ -99,21 +107,16 @@ network.refresh = function()
                     color = globals.colors.success
                 end
 
-
                 text_widget.markup = markup
                 text_widget.rx = current_rx
                 text_widget.tx = current_tx
                 text_widget.time = current_time
                 underline_widget.bg = color
+                text_widget.locked = false
             end
         end
     end)
 end
-
-network.widget:buttons(awful.util.table.join(awful.button({}, 1, function()
-    network.refresh()
-end)))
-
 
 network.init()
 

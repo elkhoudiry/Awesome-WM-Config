@@ -10,10 +10,10 @@ local space = common.txt_space
 -- [[ ############# PACKAGES HELPER FUNCTIONS #############
 
 local function set_packages_widget(packages_package)
-    packages_package.icon_container.widget.text = --
-    space .. packages_package.icon .. space
+    packages_package.icon_container.widget.text =       --
+        space .. packages_package.icon .. space
     packages_package.packages_container.widget.markup = --
-    space .. common.bold_markup(packages_package.packages) .. space
+        space .. common.bold_markup(packages_package.packages) .. space
 end
 
 local function get_installed_packages(callback)
@@ -28,12 +28,12 @@ end
 -- [[ ############# MEMORY HELPER FUNCTIONS #############
 
 local function set_memory_widget(memory_package)
-    memory_package.icon_container.widget.text = --
-    space .. memory_package.icon .. space
+    memory_package.icon_container.widget.text =     --
+        space .. memory_package.icon .. space
     memory_package.memory_container.widget.markup = --
-    space .. common.bold_markup(memory_package.memory)
-    memory_package.swap_container.widget.markup = --
-    " - " .. common.bold_markup(memory_package.swap) .. space
+        space .. common.bold_markup(memory_package.memory)
+    memory_package.swap_container.widget.markup =   --
+        " - " .. common.bold_markup(memory_package.swap) .. space
 end
 
 local function get_memory_usage(callback)
@@ -52,10 +52,10 @@ end
 -- [[ ############# GPU HELPER FUNCTIONS #############
 
 local function set_gpu_widget(gpu_package)
-    gpu_package.icon_container.widget.text = --
-    space .. gpu_package.icon .. space
+    gpu_package.icon_container.widget.text =   --
+        space .. gpu_package.icon .. space
     gpu_package.temp_container.widget.markup = --
-    space .. common.bold_markup(gpu_package.temp .. " C") .. space
+        space .. common.bold_markup(gpu_package.temp .. " C") .. space
 end
 
 local function get_gpu_temp(callback)
@@ -70,12 +70,12 @@ end
 -- [[ ############# CPU HELPER FUNCTIONS #############
 
 local function set_cpu_widget(cpu_package)
-    cpu_package.icon_container.widget.text = --
-    space .. cpu_package.icon .. space
-    cpu_package.temp_container.widget.markup = --
-    space .. common.bold_markup(cpu_package.temp .. " C")
+    cpu_package.icon_container.widget.text =    --
+        space .. cpu_package.icon .. space
+    cpu_package.temp_container.widget.markup =  --
+        space .. common.bold_markup(cpu_package.temp .. " C")
     cpu_package.usage_container.widget.markup = --
-    space .. common.bold_markup(cpu_package.usage .. " %") .. space
+        space .. common.bold_markup(cpu_package.usage .. " %") .. space
 end
 
 local function get_cpu_temp(callback)
@@ -87,7 +87,7 @@ end
 
 local function get_cpu_usage(callback)
     local cmd = " echo $(sh $HOME/.config/awesome/shell_scripts/cpu/usage.sh)"
-    awful.spawn.easy_async_with_shell(cmd, function(usage) -- 
+    awful.spawn.easy_async_with_shell(cmd, function(usage) --
         callback(usage)
     end)
 end
@@ -102,12 +102,12 @@ end
 -- [[ ############# BATTERY HELPER FUNCTIONS #############
 
 local function get_basic_battery(battery_name, callback)
-    local status_cmd = -- =======>
-    "cat /sys/class/power_supply/" .. battery_name .. "/status"
+    local status_cmd =   -- =======>
+        "cat /sys/class/power_supply/" .. battery_name .. "/status"
     local capacity_cmd = -- ======>
-    "cat /sys/class/power_supply/" .. battery_name .. "/capacity"
+        "cat /sys/class/power_supply/" .. battery_name .. "/capacity"
 
-    awful.spawn.easy_async_with_shell(status_cmd, function(status) -- 
+    awful.spawn.easy_async_with_shell(status_cmd, function(status) --
         awful.spawn.easy_async_with_shell(capacity_cmd, function(capacity)
             local capacityNum = tonumber(capacity)
 
@@ -135,8 +135,8 @@ end
 local function set_battery_widget(battery_package)
     battery_package.icon_container.widget.text =
         space .. battery_package.icon .. space
-    battery_package.capacity_container.widget.markup = -- =======>  
-    space .. common.bold_markup(battery_package.level) .. space
+    battery_package.capacity_container.widget.markup = -- =======>
+        space .. common.bold_markup(battery_package.level) .. space
 end
 -- ]]
 
@@ -175,21 +175,22 @@ end
 
 local function set_volume_level(value)
     local cmd = "pamixer  --allow-boost --set-volume " .. value
-    awful.spawn.easy_async_with_shell(cmd, function() end)
+    awful.spawn.easy_async_with_shell(cmd, function()
+    end)
 end
 
 local function set_volume_widget(volume_widget)
-    volume_widget.icon_container.widget.text = --
-    space .. volume_widget.icon .. space
+    volume_widget.icon_container.widget.text =     --
+        space .. volume_widget.icon .. space
     volume_widget.volume_container.widget.markup = --
-    space .. common.bold_markup(volume_widget.level) .. space
+        space .. common.bold_markup(volume_widget.level) .. space
 end
 
 local function init_volume_popup(volume_package)
     local popup = {}
     popup.title_widget = util_widgets.title_and_close("Volume  ")
     popup.slider_widget = util_widgets.slider_text_value( -- ====>
-    tonumber(volume_package.level), 125)
+        tonumber(volume_package.level), 125)
 
     local widget = {
         popup.title_widget.widget,
@@ -241,11 +242,11 @@ local function switch_basic_layout(language_widget)
         language_widget.current_layout = 1
     end
 
-    set_kb_layout(language_widget.layouts[language_widget.current_layout], -- 
-    function() --
-        set_language_widget(language_widget.widget,
-                            language_widget.layouts[language_widget.current_layout])
-    end)
+    set_kb_layout(language_widget.layouts[language_widget.current_layout], --
+        function()                                                         --
+            set_language_widget(language_widget.widget,
+                language_widget.layouts[language_widget.current_layout])
+        end)
 end
 
 -- ]]
@@ -254,7 +255,7 @@ end
 -- [[ ############# CONNECTIVITY HELPER FUNCTIONS #############
 
 local function get_printable_speed(number)
-    local units = {" B", "KB", "MB", "GB"}
+    local units = { " B", "KB", "MB", "GB" }
     local counter = 1
 
     while number >= 100 do
@@ -280,10 +281,10 @@ local function update_devices_widgets(devices)
             end
             device.container.widget.children[2].markup =
                 common.bold_markup( --
-                space .. get_printable_speed(device.tmp_rx - device.rx) .. space)
+                    space .. get_printable_speed(device.tmp_rx - device.rx) .. space)
             device.container.widget.children[3].markup =
                 common.bold_markup( --
-                space .. get_printable_speed(device.tmp_tx - device.tx) .. space)
+                    space .. get_printable_speed(device.tmp_tx - device.tx) .. space)
         else
             if device.container.widget.children[2].visible then
                 device.container.widget.children[2].visible = false
@@ -321,7 +322,7 @@ end
 local function get_devices_state(all_devices_str, callback)
     awful.spawn.easy_async_with_shell(
         " echo $(sh $HOME/.config/awesome/shell_scripts/connectivity/basic_script.sh -d '" ..
-            all_devices_str .. "') ", function(out) -- 
+        all_devices_str .. "') ", function(out)     --
             callback(common.split(out, "||"))
         end)
 end
@@ -333,7 +334,7 @@ local function init_devices(package, devices, wired)
         device.name = device_name
         device.wired = wired
         device.conneced = false
-        device.icons_table = wired and {"", ""} or {"直", "睊"}
+        device.icons_table = wired and { "", "" } or { "直", "睊" }
         device.icon = ""
         device.rx = 0
         device.tx = 0
@@ -342,12 +343,12 @@ local function init_devices(package, devices, wired)
         device.container = wibox.container.background()
         device.container.widget = wibox.widget {
             layout = wibox.layout.align.horizontal,
-            {widget = wibox.widget.textbox, text = "IC "},
-            {widget = wibox.widget.textbox, text = "RX "},
-            {widget = wibox.widget.textbox, text = "TX "}
+            { widget = wibox.widget.textbox, text = "IC " },
+            { widget = wibox.widget.textbox, text = "RX " },
+            { widget = wibox.widget.textbox, text = "TX " }
         }
 
-        local tooltip = awful.tooltip {objects = {device.container}}
+        local tooltip = awful.tooltip { objects = { device.container } }
         tooltip.visible = false
 
         device.container:connect_signal("mouse::enter", function()
@@ -385,8 +386,8 @@ end
 function basic_module.basic_connectivity(wired_devices, wifi_devices)
     local package = {}
     package.all_devices = {}
-    package.wired_layout = {layout = wibox.layout.align.horizontal}
-    package.wifi_layout = {layout = wibox.layout.align.horizontal}
+    package.wired_layout = { layout = wibox.layout.align.horizontal }
+    package.wifi_layout = { layout = wibox.layout.align.horizontal }
 
     package.all_devices_str = ""
 
@@ -409,6 +410,7 @@ function basic_module.basic_connectivity(wired_devices, wifi_devices)
     package.refresh()
     return package
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -424,7 +426,7 @@ function basic_module.basic_kb_layout(layouts)
     language_widget.layouts_size = size
 
     language_widget.widget = wibox.widget {
-        {{widget = wibox.widget.textbox}, widget = wibox.container.background},
+        { { widget = wibox.widget.textbox }, widget = wibox.container.background },
         layout = wibox.layout.align.horizontal
     }
     language_widget.switch = function() switch_basic_layout(language_widget) end
@@ -435,12 +437,13 @@ function basic_module.basic_kb_layout(layouts)
 
     language_widget.refresh = function()
         set_language_widget(language_widget.widget,
-                            language_widget.layouts[language_widget.current_layout])
+            language_widget.layouts[language_widget.current_layout])
     end
 
     language_widget.refresh()
     return language_widget
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -464,6 +467,7 @@ function basic_module.basic_time_date()
 
     return time_date_widget
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -518,6 +522,7 @@ function basic_module.basic_volume()
     volume_package.refresh()
     return volume_package
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -536,7 +541,7 @@ function basic_module.basic_battery(battery_name)
     battery_package.level = ""
 
     battery_package.refresh = function(num)
-        get_basic_battery("BAT0", function(icon, level) -- 
+        get_basic_battery("BAT0", function(icon, level) --
             battery_package.icon = icon
             battery_package.level = level
             set_battery_widget(battery_package)
@@ -552,6 +557,7 @@ function basic_module.basic_battery(battery_name)
     battery_package.refresh()
     return battery_package
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -573,7 +579,7 @@ function basic_module.basic_cpu_sensors()
     cpu_package.usage_container.widget = wibox.widget.textbox()
 
     cpu_package.refresh = function()
-        get_cpu_temp(function(temp) --
+        get_cpu_temp(function(temp)       --
             cpu_package.temp = temp
             get_cpu_usage(function(usage) --
                 cpu_package.usage = tostring(tonumber(usage))
@@ -589,7 +595,7 @@ function basic_module.basic_cpu_sensors()
         layout = wibox.layout.align.horizontal
     }
 
-    local tooltip = awful.tooltip {objects = {cpu_package.widget}}
+    local tooltip = awful.tooltip { objects = { cpu_package.widget } }
     tooltip.visible = false
 
     cpu_package.widget:connect_signal("mouse::enter", function()
@@ -606,6 +612,7 @@ function basic_module.basic_cpu_sensors()
 
     return cpu_package
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -640,6 +647,7 @@ function basic_module.basic_gpu_sensors()
 
     return memory_package
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -679,6 +687,7 @@ function basic_module.basic_memory()
 
     return memory_package
 end
+
 -- ]]
 
 -- [[ ################################################################### ]] --
@@ -713,6 +722,7 @@ function basic_module.basic_packages()
 
     return packages_package
 end
+
 -- ]]
 
 -- ]]

@@ -28,6 +28,7 @@ globals.dimensions.margin                = 4
 globals.limits                           = {}
 globals.limits.cpu_temp                  = 80
 globals.limits.ram_percent               = 80
+globals.limits.download_speed            = 800 * 1024
 
 globals.colors                           = {
     crimson = "#dc143c",
@@ -42,6 +43,7 @@ globals.colors                           = {
     green = "#77c077",
     orangish = "#f27348",
     purple = "#a15d98",
+    success = "#77c077",
     error = "#dc143c",
     background = "#222222",
     on_background = "#ffffff",

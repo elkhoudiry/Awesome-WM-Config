@@ -12,6 +12,7 @@ local templetes       = require("templetes")
 local keyboard_layout = require("keyboard-layout-widget")
 local memory          = require("memory-widget")
 local cpu             = require("cpu-widget")
+local network         = require("network-monitor")
 -- {{{ Wibar
 
 local function get_focused_task_markup(desktop, client)
@@ -280,6 +281,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     keyboard_layout.widget,
                     memory.widget,
                     cpu.widget,
+                    network.widget,
                     wibox.widget.systray(),
                     text_clock_widget,
                     screen.tiling_layouts_widget,

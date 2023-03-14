@@ -28,6 +28,7 @@ globals.dimensions.margin                = 4
 globals.limits                           = {}
 globals.limits.cpu_temp                  = 80
 globals.limits.ram_percent               = 80
+globals.limits.gpu_temp                  = 70
 globals.limits.download_speed            = 800 * 1024
 
 globals.colors                           = {

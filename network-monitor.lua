@@ -94,10 +94,6 @@ network.refresh = function()
                     color = globals.colors.success
                 end
 
-                Debug_notification(
-                    "curr rx: " .. current_rx .. ", rx: " .. text_widget.rx .. "\n" ..
-                    "curr time: " .. current_time .. ", time: " .. text_widget.time)
-
                 text_widget.markup = text.icon_title_markup(
                     "󰌘",
                     get_printable_speed(rx) .. " " .. get_printable_speed(tx),

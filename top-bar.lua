@@ -12,6 +12,7 @@ local templetes       = require("templetes")
 local keyboard_layout = require("keyboard-layout-widget")
 local memory          = require("memory-widget")
 local cpu             = require("cpu-widget")
+local gpu             = require("gpu-widget")
 local network         = require("network-monitor")
 -- {{{ Wibar
 
@@ -280,6 +281,7 @@ screen.connect_signal("request::desktop_decoration", function(screen)
                     layout = wibox.layout.fixed.horizontal,
                     keyboard_layout.widget,
                     memory.widget,
+                    gpu.widget,
                     cpu.widget,
                     network.widget,
                     wibox.widget.systray(),

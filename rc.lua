@@ -484,7 +484,7 @@ awful.keyboard.append_global_keybindings({
 -- Auto Start apps
 do
     local autostarts = {
-        "lxpolkit &", "flameshot", "arandr", "mictray", "slack", "discord"
+        "lxpolkit &", "flameshot", "arandr", "mictray", "slack", "discord", "picom --backend glx"
     }
 
     for _, i in pairs(autostarts) do

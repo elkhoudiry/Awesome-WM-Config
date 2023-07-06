@@ -8,7 +8,7 @@ local templetes          = require("templetes")
 local keyboard_layout    = {}
 local get_layout_command = "setxkbmap -query | awk '/layout/ {print $2}'"
 
-keyboard_layout.layouts  = { "us", "ar" }
+keyboard_layout.layouts  = { "us", "ara" }
 
 keyboard_layout.widget   = wibox.widget {
     templetes.underlineable({

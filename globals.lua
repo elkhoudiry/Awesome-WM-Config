@@ -13,8 +13,8 @@ globals.font.full_modified               = function(size)
 end
 
 globals.dimensions                       = {}
-globals.dimensions.gap_size              = 4
-globals.dimensions.border_width          = 4
+globals.dimensions.gap_size              = 1
+globals.dimensions.border_width          = 2
 globals.dimensions.top_bar_height        = 28
 
 globals.dimensions.spacing               = {}
